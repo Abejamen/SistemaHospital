@@ -1,51 +1,74 @@
-.table-hover tbody tr:hover {
-    background-color: #eef4ff !important;
-}
-
-
-.table {
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-
-.badge {
-    font-size: 0.85rem;
-}
-
-
-.card {
-    border-radius: 20px !important;
-}
-
-
-.card-header {
-    border-radius: 20px 20px 0 0 !important;
-}
-
-
+.table-hover tbody tr:hover,
 .fila-click:hover {
     background-color: #eef4ff !important;
     transition: 0.2s ease-in-out;
 }
 
-
 .table {
-    border-radius: 15px;
+    border-radius: 15px !important;
     overflow: hidden;
 }
 
-
 .badge {
+    font-size: 0.85rem;
     border-radius: 8px;
 }
 
-
 .card {
+    border-radius: 20px !important;
     box-shadow: 0px 8px 22px rgba(0,0,0,0.12) !important;
 }
 
+.card-header {
+    border-radius: 20px 20px 0 0 !important;
+}
 
-.form-control {
-    background: #f8fbff;
+form input,
+form select,
+form textarea {
+    border-radius: 10px !important;
+    border: 1px solid #d6d6d6 !important;
+    padding: 10px !important;
+    background-color: #f8fbff !important;
+    font-size: 1rem;
+}
+
+form label {
+    color: #233f72 !important;
+    font-weight: 600;
+}
+
+form textarea {
+    min-height: 90px;
+}
+
+.form-check-input {
+    width: 1.3em !important;
+    height: 1.3em !important;
+    cursor: pointer !important;
+    border-radius: 0.35em !important;
+    border: 2px solid #b9c4d1 !important;
+    background-color: #fff !important;
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd !important;
+    border-color: #0d6efd !important;
+}
+
+.form-check-input:active {
+    transform: scale(0.85);
+    transition: 0.1s;
+}
+
+.form-check-input:hover {
+    border-color: #0a58ca !important;
+}
+
+hr {
+    border-top: 2px solid #e2e8f0;
+}
+
+.mb-section {
+    margin-bottom: 2.5rem !important;
 }

@@ -8,7 +8,6 @@ ALLOWED_HOSTS = []
 
 # APPS
 INSTALLED_APPS = [
-    # DJANGO
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -16,19 +15,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
-
-    # APPS DEL PROYECTO
     "usuarios",
     "core",
     "formularios",
-
-    # DJANGO ALLAUTH
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.mfa",
-
-    # Seguridad extra (opcional)
     "axes",
     "preventconcurrentlogins",
     "django_extensions",
@@ -112,9 +105,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# ----------------------------------------
-#  CONFIGURACIÓN DE DJANGO ALLAUTH
-# ----------------------------------------
+
 
 # Método de login
 ACCOUNT_EMAIL_REQUIRED = True
