@@ -1,0 +1,70 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+
+**/migrations/*.pyc
+**/migrations/*.pyo
+**/migrations/__pycache__/
+**/migrations/!(**init**).py
+
+# Archivos temporales de Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Archivos de configuración secreta
+.env
+*.env
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+.venv/
+
+
+build/
+dist/
+*.spec
+
+# Node.js
+node_modules/
+npm-debug.log
+package-lock.json
+yarn-error.log
+
+# Tailwind CSS build output
+static/css/dist/
+static_src/node_modules/
+
+
+
+# VSCode
+.vscode/
+.history/
+*.code-workspace
+
+# PyCharm / Jetbrains
+.idea/
+*.iml
+
+
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Archivos temporales
+*.zip
+*.rar
+*.7z
+*.bak
+*.tmp
