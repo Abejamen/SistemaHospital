@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-end mb-3">
+    <a href="/dashboard/" class="btn btn-outline-danger btn-sm"
+       style="font-size: 1.4rem; padding: 2px 10px;">
+        ✕
+    </a>
+</div>
+
+
+<h3 class="mb-4">
+    {% if madre %}
+        Formulario Clínico: {{ madre.nombre_completo_madre }}
+    {% else %}
+        Nuevo Formulario Clínico
+    {% endif %}
+</h3>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-white">Datos de la Madre</div>
+        <div class="card-body">
+            {{ madre_form.non_field_errors }}
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nombre Completo</label>
+                    {{ madre_form.nombre_completo_madre }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">RUT</label>
+                    {{ madre_form.rut }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Fecha Nacimiento</label>
+                    {{ madre_form.fecha_nac_madre }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-2">
+                    <label class="form-label">Edad Materna</label>
+                    {{ madre_form.edad_materna }}
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Comuna</label>
+                    {{ madre_form.comuna }}
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">CESFAM</label>
+                    {{ madre_form.cesfam }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Madre VIH</label>
+                    {{ madre_form.madre_vih }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">VDRL Materno</label>
+                    {{ madre_form.vdrl_materno }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Hepatitis B Materno</label>
+                    {{ madre_form.hepatitis_b_materno }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-2 form-check">
+                    {{ madre_form.migrante }}
+                    <label class="form-check-label">Migrante</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ madre_form.pueblo_originario }}
+                    <label class="form-check-label">Pueblo Originario</label>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">E (Paridad)</label>
+                    {{ madre_form.e_paridad }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">G (Gestaciones)</label>
+                    {{ madre_form.g_gestaciones }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="chkParto" name="incluir_parto"
+               {% if incluir_parto %}checked{% endif %}>
+        <label class="form-check-label" for="chkParto">
+            Registrar / Editar datos de Parto
+        </label>
+    </div>
+
+    <div id="partoSection" class="card mb-3 {% if not incluir_parto %}d-none{% endif %}">
+        <div class="card-header bg-success text-white">Datos del Parto</div>
+        <div class="card-body">
+            {{ parto_form.non_field_errors }}
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Fecha Nacimiento</label>
+                    {{ parto_form.fecha_nac }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Hora</label>
+                    {{ parto_form.hora }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tipo Parto</label>
+                    {{ parto_form.tipo_parto }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-check">
+                    {{ parto_form.gases_cordon }}
+                    <label class="form-check-label">Gases Cordón</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ parto_form.apego_canguro }}
+                    <label class="form-check-label">Apego Canguro</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ parto_form.apego_tunel }}
+                    <label class="form-check-label">Apego Túnel</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ parto_form.clampeo_tardio }}
+                    <label class="form-check-label">Clampeo Tardío</label>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-check">
+                    {{ parto_form.ive_causal_2 }}
+                    <label class="form-check-label">IVE Causal 2</label>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Destino RN</label>
+                    {{ parto_form.destino_rn }}
+                </div>
+                <div class="col-md-5 form-check">
+                    {{ parto_form.alojamiento_conjunto_puerperio }}
+                    <label class="form-check-label">Alojamiento conjunto puerperio</label>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 form-check">
+                    {{ parto_form.lactancia_antes_60min }}
+                    <label class="form-check-label">Lactancia antes 60 min</label>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Acompañante en pabellón</label>
+                    {{ parto_form.acompanante_en_pabellon }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Observaciones Parto</label>
+                {{ parto_form.observaciones_parto }}
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-check">
+                    {{ parto_form.interno }}
+                    <label class="form-check-label">Interno</label>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Resultado Examen 1</label>
+                    {{ parto_form.resultado_examen_1 }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Resultado Examen 2</label>
+                    {{ parto_form.resultado_examen_2 }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tratamiento Parto</label>
+                {{ parto_form.tratamiento_parto }}
+            </div>
+        </div>
+    </div>
+
+    <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="chkRN" name="incluir_rn"
+               {% if incluir_rn %}checked{% endif %}>
+        <label class="form-check-label" for="chkRN">
+            Registrar / Editar datos del Recién Nacido
+        </label>
+    </div>
+
+    <div id="rnSection" class="card mb-3 {% if not incluir_rn %}d-none{% endif %}">
+        <div class="card-header bg-warning text-dark">Datos del Recién Nacido</div>
+        <div class="card-body">
+            {{ rn_form.non_field_errors }}
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Apellido Paterno RN</label>
+                    {{ rn_form.apellido_paterno_rn }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Sexo</label>
+                    {{ rn_form.sexo }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Peso (g)</label>
+                    {{ rn_form.peso }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Talla (cm)</label>
+                    {{ rn_form.talla }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Circunferencia Craneana (cm)</label>
+                    {{ rn_form.circunferencia_craneana }}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Diagnóstico</label>
+                {{ rn_form.diagnostico }}
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 form-check">
+                    {{ rn_form.malformacion_congenita }}
+                    <label class="form-check-label">Malformación congénita</label>
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Descripción malformación</label>
+                    {{ rn_form.descripcion_malformacion }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">APGAR 1 min</label>
+                    {{ rn_form.apgar_1min }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">APGAR 5 min</label>
+                    {{ rn_form.apgar_5min }}
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ rn_form.reanimacion_basica }}
+                    <label class="form-check-label">Reanimación básica</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ rn_form.reanimacion_avanzada }}
+                    <label class="form-check-label">Reanimación avanzada</label>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-check">
+                    {{ rn_form.profilaxis_ocular }}
+                    <label class="form-check-label">Profilaxis ocular</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ rn_form.vacuna_hepatitis_b }}
+                    <label class="form-check-label">Vacuna Hepatitis B</label>
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ rn_form.vacuna_bcg }}
+                    <label class="form-check-label">Vacuna BCG</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Profesional que vacuna VHB</label>
+                {{ rn_form.profesional_que_vacuna_vhb }}
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3 form-check">
+                    {{ rn_form.profilaxis_completa }}
+                    <label class="form-check-label">Profilaxis completa</label>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Semanas gestación</label>
+                    {{ rn_form.semanas_gestacion }}
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Días gestación</label>
+                    {{ rn_form.dias_gestacion }}
+                </div>
+                <div class="col-md-3 form-check">
+                    {{ rn_form.apego_inmediato }}
+                    <label class="form-check-label">Apego inmediato</label>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Destino final</label>
+                    {{ rn_form.destino_final }}
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Notas RN</label>
+                    {{ rn_form.notas_rn }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-primary">Guardar</button>
+</form>
+
+<script>
+const chkParto = document.getElementById("chkParto");
+const partoSection = document.getElementById("partoSection");
+const chkRN = document.getElementById("chkRN");
+const rnSection = document.getElementById("rnSection");
+
+if (chkParto) {
+    chkParto.addEventListener("change", function() {
+        partoSection.classList.toggle("d-none", !this.checked);
+    });
+}
+
+if (chkRN) {
+    chkRN.addEventListener("change", function() {
+        rnSection.classList.toggle("d-none", !this.checked);
+    });
+}
+</script>
+
+{% endblock %}

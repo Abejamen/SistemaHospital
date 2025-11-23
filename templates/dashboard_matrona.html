@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3 class="mb-4">Panel de Matrona</h3>
+
+<a href="/formulario/0/" class="btn btn-success mb-3">Crear Formulario Clínico</a>
+
+
+<form method="get" class="mb-3 d-flex">
+    <input type="text" name="q" class="form-control me-2" placeholder="Buscar por nombre o RUT..." value="{{ request.GET.q }}">
+    <button class="btn btn-primary">Buscar</button>
+</form>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Nombre Madre</th>
+            <th>RUT</th>
+            <th>Fecha/Hora Creación</th>
+            <th>Creado por</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for madre in madres %}
+            <tr onclick="window.location='/formulario/{{ madre.id }}/';" style="cursor:pointer;">
+            <td>{{ madre.nombre_completo_madre }}</td>
+            <td>{{ madre.rut }}</td>
+            <td>{{ madre.fecha_creacion|date:"d-m-Y H:i" }}</td>
+            <td>{{ madre.creado_por.email }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-center text-muted">No hay formularios registrados</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
