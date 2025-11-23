@@ -15,7 +15,6 @@ class Usuario(AbstractUser):
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     def save(self, *args, **kwargs):
-        # Si el usuario es superusuario → debe ser ADMIN
         if self.is_superuser:
             self.role = "ADMIN"
 

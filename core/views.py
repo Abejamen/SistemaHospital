@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from formularios.models import Madre, Parto, RecienNacido
 from formularios.forms import MadreForm, PartoForm, RecienNacidoForm
+
 
 @login_required
 def dashboard_view(request):
@@ -11,8 +13,8 @@ def dashboard_view(request):
 
     if q:
         madres = madres.filter(
-            models.Q(nombre_completo_madre__icontains=q) |
-            models.Q(rut__icontains=q)
+            Q(nombre_completo__icontains=q) |
+            Q(rut__icontains=q)
         )
 
     return render(request, "dashboard_matrona.html", {
@@ -38,7 +40,6 @@ def formulario_unico(request, id):
         incluir_rn = request.POST.get("incluir_rn") == "on"
 
         madre_form = MadreForm(request.POST, instance=madre)
-
         parto_form = PartoForm(request.POST, instance=parto if incluir_parto else None)
         rn_form = RecienNacidoForm(request.POST, instance=rn if incluir_rn else None)
 
@@ -61,18 +62,16 @@ def formulario_unico(request, id):
         madre_obj.save()
 
         parto_obj = None
-        if incluir_parto:
-            if parto_form.is_valid():
-                parto_obj = parto_form.save(commit=False)
-                parto_obj.madre = madre_obj
-                parto_obj.save()
+        if incluir_parto and parto_form.is_valid():
+            parto_obj = parto_form.save(commit=False)
+            parto_obj.madre = madre_obj
+            parto_obj.save()
 
-        if incluir_rn:
-            if rn_form.is_valid():
-                rn_obj = rn_form.save(commit=False)
-                if incluir_parto and parto_obj:
-                    rn_obj.parto = parto_obj
-                rn_obj.save()
+        if incluir_rn and rn_form.is_valid():
+            rn_obj = rn_form.save(commit=False)
+            if parto_obj:
+                rn_obj.parto = parto_obj
+            rn_obj.save()
 
         return redirect("/dashboard/")
 

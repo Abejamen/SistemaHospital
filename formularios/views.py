@@ -25,9 +25,21 @@ def formulario_unico(request, id):
         incluir_bcg = request.POST.get("incluir_bcg") == "on"
 
         madre_form = MadreForm(request.POST, instance=madre)
-        parto_form = PartoForm(request.POST, instance=parto if incluir_parto else None)
-        rn_form = RecienNacidoForm(request.POST, instance=rn if incluir_rn else None)
-        bcg_form = VacunaBCGForm(request.POST, instance=bcg if incluir_bcg else None)
+
+        parto_form = PartoForm(
+            request.POST if incluir_parto else None,
+            instance=parto if incluir_parto else None
+        )
+
+        rn_form = RecienNacidoForm(
+            request.POST if incluir_rn else None,
+            instance=rn if incluir_rn else None
+        )
+
+        bcg_form = VacunaBCGForm(
+            request.POST if incluir_bcg else None,
+            instance=bcg if incluir_bcg else None
+        )
 
         if not madre_form.is_valid():
             return render(request, "formulario_unico.html", {
@@ -42,7 +54,6 @@ def formulario_unico(request, id):
                 "incluir_parto": incluir_parto,
                 "incluir_rn": incluir_rn,
                 "incluir_bcg": incluir_bcg,
-                "error": None,
             })
 
         madre_obj = madre_form.save(commit=False)
@@ -94,5 +105,4 @@ def formulario_unico(request, id):
         "incluir_parto": incluir_parto,
         "incluir_rn": incluir_rn,
         "incluir_bcg": incluir_bcg,
-        "error": None,
     })

@@ -75,9 +75,12 @@ class RecienNacido(models.Model):
 class VacunaBCG(models.Model):
     rn = models.ForeignKey(RecienNacido, on_delete=models.SET_NULL, null=True)
 
+    numero_registro = models.CharField(max_length=20, null=True, blank=True)
+
     nombre_completo_madre = models.CharField(max_length=150, null=True, blank=True)
     rut_madre = models.CharField(max_length=20, null=True, blank=True)
     fecha_nacimiento_madre = models.DateField(null=True, blank=True)
+
     fecha_nacimiento_hijo = models.DateField(null=True, blank=True)
     sexo_rn = models.CharField(max_length=10, null=True, blank=True)
     peso_rn = models.IntegerField(null=True, blank=True)
@@ -98,4 +101,4 @@ class VacunaBCG(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Vacuna BCG - RN {self.rn_id}"
+        return f"BCG #{self.numero_registro}"

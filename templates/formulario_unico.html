@@ -53,7 +53,7 @@
 
                 <div class="row mb-3">
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold">Edad</label>
+                        <label class="form-label fw-semibold">Edad materna</label>
                         {{ madre_form.edad }}
                     </div>
                     <div class="col-md-5">
@@ -105,6 +105,7 @@
 
             </div>
         </div>
+
 
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="chkParto" name="incluir_parto"
@@ -193,6 +194,7 @@
             </div>
         </div>
 
+
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="chkRN" name="incluir_rn"
                    {% if incluir_rn %}checked{% endif %}>
@@ -200,6 +202,7 @@
                 Registrar / Editar datos del Recién Nacido
             </label>
         </div>
+
 
         <div id="rnSection" class="card shadow-lg border-0 mb-4 {% if not incluir_rn %}d-none{% endif %}"
              style="border-radius:20px;">
@@ -212,6 +215,7 @@
             <div class="card-body">
 
                 {{ rn_form.non_field_errors }}
+
 
                 <div class="row mb-3">
                     <div class="col-md-4">
@@ -321,53 +325,108 @@
                     <label class="form-label fw-semibold">Notas RN</label>
                     {{ rn_form.notas_rn }}
                 </div>
-            </div>
-        </div>
-
-        <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" id="chkBCG" name="incluir_bcg"
-                   {% if incluir_bcg %}checked{% endif %}>
-            <label class="form-check-label fw-semibold ms-1">
-                Registrar Vacuna BCG
-            </label>
-        </div>
-
-        <div id="bcgSection" class="card shadow-lg border-0 mb-4 {% if not incluir_bcg %}d-none{% endif %}"
-             style="border-radius:20px;">
-
-            <div class="card-header text-white fw-bold py-3"
-                 style="background: linear-gradient(90deg, #0d6efd, #0a58ca); border-radius:20px 20px 0 0;">
-                Registro Vacuna BCG
-            </div>
-
-            <div class="card-body">
-
-                {{ bcg_form.non_field_errors }}
-
-                <div class="row mb-3">
-                    <div class="col-md-4 form-check mt-4">
-                        {{ bcg_form.aplicada }}
-                        <label class="form-check-label ms-1">Aplicada</label>
-                    </div>
-                    <div class="col-md-8">
-                        <label class="form-label fw-semibold">Comuna</label>
-                        {{ bcg_form.comuna }}
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Reacción adversa</label>
-                        {{ bcg_form.reaccion_adversa }}
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold">Cama / ubicación</label>
-                        {{ bcg_form.cama_ubicacion }}
-                    </div>
-                </div>
 
             </div>
         </div>
+
+
+
+<div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" id="chkBCG" name="incluir_bcg"
+           {% if incluir_bcg %}checked{% endif %}>
+    <label class="form-check-label fw-semibold ms-1">
+        Registrar Vacuna BCG
+    </label>
+</div>
+
+
+<div id="bcgSection" class="card shadow-lg border-0 mb-4 {% if not incluir_bcg %}d-none{% endif %}"
+     style="border-radius:20px;">
+
+    <div class="card-header text-white fw-bold py-3"
+         style="background: linear-gradient(90deg, #0d6efd, #0a58ca); border-radius:20px 20px 0 0;">
+        Registro Vacuna BCG
+    </div>
+
+    <div class="card-body">
+
+        {{ bcg_form.non_field_errors }}
+
+
+        <div class="row mb-4">
+            <div class="col-md-4 form-check mt-4">
+                {{ bcg_form.aplicada }}
+                <label class="form-check-label ms-1">Aplicada</label>
+            </div>
+
+            <div class="col-md-8">
+                <label class="form-label fw-semibold">Comuna</label>
+                {{ bcg_form.comuna }}
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Reacción adversa</label>
+                {{ bcg_form.reaccion_adversa }}
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Cama / ubicación</label>
+                {{ bcg_form.cama_ubicacion }}
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+
+        <h5 class="fw-bold mb-3" style="color:#1a3d7c;">Datos automáticos del sistema</h5>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Nombre madre</label>
+                <input type="text" class="form-control" value="{{ bcg.nombre_completo_madre }}"
+                       disabled>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">RUT madre</label>
+                <input type="text" class="form-control" value="{{ bcg.rut_madre }}" 
+                       disabled>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Fecha nacimiento madre</label>
+                <input type="text" class="form-control" value="{{ bcg.fecha_nacimiento_madre }}"
+                       disabled>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Fecha nacimiento hijo</label>
+                <input type="text" class="form-control" value="{{ bcg.fecha_nacimiento_hijo }}"
+                       disabled>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Sexo RN</label>
+                <input type="text" class="form-control" value="{{ bcg.sexo_rn }}"
+                       disabled>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Peso RN (g)</label>
+                <input type="text" class="form-control" value="{{ bcg.peso_rn }}"
+                       disabled>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 
         <div class="text-end mb-4">
             <button class="btn btn-primary btn-lg px-4 shadow-sm" style="border-radius:12px;">
@@ -378,6 +437,8 @@
     </form>
 </div>
 
+
+
 <script>
     const chkParto = document.getElementById("chkParto");
     const partoSection = document.getElementById("partoSection");
@@ -387,31 +448,25 @@
     const bcgSection = document.getElementById("bcgSection");
 
     if (chkParto) {
-        chkParto.addEventListener("change", function() {
-            const checked = this.checked;
-            partoSection.classList.toggle("d-none", !checked);
-            if (!checked) {
-                if (chkRN) {
-                    chkRN.checked = false;
-                    rnSection.classList.add("d-none");
-                }
-                if (chkBCG) {
-                    chkBCG.checked = false;
-                    bcgSection.classList.add("d-none");
-                }
+        chkParto.addEventListener("change", function () {
+            partoSection.classList.toggle("d-none", !this.checked);
+            if (!this.checked) {
+                chkRN.checked = false;
+                rnSection.classList.add("d-none");
+                chkBCG.checked = false;
+                bcgSection.classList.add("d-none");
             }
         });
     }
 
     if (chkRN) {
-        chkRN.addEventListener("change", function() {
-            const checked = this.checked;
-            rnSection.classList.toggle("d-none", !checked);
-            if (checked && chkParto && !chkParto.checked) {
+        chkRN.addEventListener("change", function () {
+            rnSection.classList.toggle("d-none", !this.checked);
+            if (this.checked && !chkParto.checked) {
                 chkParto.checked = true;
                 partoSection.classList.remove("d-none");
             }
-            if (!checked && chkBCG) {
+            if (!this.checked) {
                 chkBCG.checked = false;
                 bcgSection.classList.add("d-none");
             }
@@ -419,15 +474,14 @@
     }
 
     if (chkBCG) {
-        chkBCG.addEventListener("change", function() {
-            const checked = this.checked;
-            bcgSection.classList.toggle("d-none", !checked);
-            if (checked) {
-                if (chkParto && !chkParto.checked) {
+        chkBCG.addEventListener("change", function () {
+            bcgSection.classList.toggle("d-none", !this.checked);
+            if (this.checked) {
+                if (!chkParto.checked) {
                     chkParto.checked = true;
                     partoSection.classList.remove("d-none");
                 }
-                if (chkRN && !chkRN.checked) {
+                if (!chkRN.checked) {
                     chkRN.checked = true;
                     rnSection.classList.remove("d-none");
                 }

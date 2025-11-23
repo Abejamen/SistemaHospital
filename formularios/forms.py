@@ -27,28 +27,6 @@ class MadreForm(forms.ModelForm):
             )
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        required_fields = [
-            "nombre_completo",
-            "rut",
-        ]
-
-        for name, field in self.fields.items():
-            if name in required_fields:
-                field.required = True
-            else:
-                field.required = False
-
-            if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs.update({"class": "form-check-input"})
-            else:
-                field.widget.attrs.update({"class": "form-control"})
-
-        self.fields["fecha_nacimiento"].input_formats = ["%Y-%m-%d"]
-
-
 class PartoForm(forms.ModelForm):
     class Meta:
         model = Parto
@@ -72,9 +50,7 @@ class PartoForm(forms.ModelForm):
                 attrs={"type": "date"},
                 format="%Y-%m-%d",
             ),
-            "hora_parto": forms.TimeInput(
-                attrs={"type": "time"}
-            ),
+            "hora_parto": forms.TimeInput(attrs={"type": "time"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -90,6 +66,7 @@ class PartoForm(forms.ModelForm):
                 field.widget.attrs.update({"class": "form-check-input"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
+
 
 
 class RecienNacidoForm(forms.ModelForm):
@@ -120,37 +97,14 @@ class RecienNacidoForm(forms.ModelForm):
             "notas_rn",
         ]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        for field in self.fields.values():
-            field.required = False
-
-        for name, field in self.fields.items():
-            if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs.update({"class": "form-check-input"})
-            else:
-                field.widget.attrs.update({"class": "form-control"})
-
 
 class VacunaBCGForm(forms.ModelForm):
     class Meta:
         model = VacunaBCG
         fields = [
+            "numero_registro",
             "aplicada",
             "comuna",
             "reaccion_adversa",
             "cama_ubicacion",
         ]
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        for field in self.fields.values():
-            field.required = False
-
-        for name, field in self.fields.items():
-            if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs.update({"class": "form-check-input"})
-            else:
-                field.widget.attrs.update({"class": "form-control"})
