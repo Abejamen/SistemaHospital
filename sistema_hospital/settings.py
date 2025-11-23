@@ -136,3 +136,6 @@ LOGOUT_REDIRECT_URL = "/"
 ACCOUNT_LOGOUT_ON_GET = True
 
 AUTH_USER_MODEL = "usuarios.Usuario"
+
+
+AXES_ENABLED = False

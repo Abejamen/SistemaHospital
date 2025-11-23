@@ -12,6 +12,13 @@
             <form method="post" action="{% url 'account_login' %}">
                 {% csrf_token %}
 
+                {# MENSAJE DE ERROR GENERAL #}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger text-center mb-3">
+                        Correo o contraseña incorrecta.
+                    </div>
+                {% endif %}
+
                 <div class="mb-3">
                     <label class="form-label">Correo</label>
                     {{ form.login }}
@@ -27,7 +34,6 @@
                 <a href="{% url 'account_signup' %}" class="btn btn-success w-100 mb-2">
                     Registrarme
                 </a>
-
 
                 <div class="text-center mt-2">
                     <a href="{% url 'account_reset_password' %}" class="text-decoration-none">
