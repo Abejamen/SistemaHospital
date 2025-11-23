@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
+
 
 
 class Madre(models.Model):
@@ -16,7 +17,11 @@ class Madre(models.Model):
     pueblo_originario = models.BooleanField(default=False)
     e_paridad = models.IntegerField(null=True, blank=True)
     g_gestaciones = models.IntegerField(null=True, blank=True)
-    creado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    creado_por = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.CASCADE
+)
+
 
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 

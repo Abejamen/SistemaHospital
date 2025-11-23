@@ -1,0 +1,51 @@
+.table-hover tbody tr:hover {
+    background-color: #eef4ff !important;
+}
+
+
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+
+.badge {
+    font-size: 0.85rem;
+}
+
+
+.card {
+    border-radius: 20px !important;
+}
+
+
+.card-header {
+    border-radius: 20px 20px 0 0 !important;
+}
+
+
+.fila-click:hover {
+    background-color: #eef4ff !important;
+    transition: 0.2s ease-in-out;
+}
+
+
+.table {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+
+.badge {
+    border-radius: 8px;
+}
+
+
+.card {
+    box-shadow: 0px 8px 22px rgba(0,0,0,0.12) !important;
+}
+
+
+.form-control {
+    background: #f8fbff;
+}

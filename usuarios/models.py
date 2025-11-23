@@ -1,17 +1,26 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.contrib.auth.models import User
 
-class Position(models.Model):
-    code = models.CharField(max_length=20, unique=True)
-    name = models.CharField(max_length=50)
+class Usuario(AbstractUser):
+    ROLES = (
+        ('ADMIN', 'Administrador'),
+        ('SUPERVISOR', 'Supervisor'),
+        ('MATRONA', 'Matrona'),
+    )
+
+    email = models.EmailField(unique=True)
+    role = models.CharField(max_length=20, choices=ROLES, default='MATRONA')
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+
+    def save(self, *args, **kwargs):
+        # Si el usuario es superusuario → debe ser ADMIN
+        if self.is_superuser:
+            self.role = "ADMIN"
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    position = models.ForeignKey(Position, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return f"{self.user.email} - {self.position}"
+        full_name = f"{self.first_name} {self.last_name}".strip()
+        return full_name if full_name else self.email

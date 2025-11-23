@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="d-flex justify-content-center mt-5">
+    <div class="card shadow" style="width: 420px;">
+        <div class="card-body">
+
+            <h3 class="text-center mb-4">Registrar Usuario</h3>
+
+            <form method="post" action="{% url 'account_signup' %}">
+                {% csrf_token %}
+
+                <!-- NOMBRE -->
+                <div class="mb-3">
+                    <label class="form-label">Nombre</label>
+                    {{ form.first_name }}
+                </div>
+
+                <!-- APELLIDO -->
+                <div class="mb-3">
+                    <label class="form-label">Apellido</label>
+                    {{ form.last_name }}
+                </div>
+
+                <!-- CORREO -->
+                <div class="mb-3">
+                    <label class="form-label">Correo</label>
+                    {{ form.email }}
+                </div>
+
+                <!-- CONTRASEÑA -->
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    {{ form.password1 }}
+                </div>
+
+                <!-- CONFIRMAR CONTRASEÑA -->
+                <div class="mb-3">
+                    <label class="form-label">Confirmar contraseña</label>
+                    {{ form.password2 }}
+                </div>
+
+                <button class="btn btn-success w-100 mb-2">Registrarme</button>
+
+                <a href="{% url 'account_login' %}" class="btn btn-outline-primary w-100">
+                    Volver a iniciar sesión
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

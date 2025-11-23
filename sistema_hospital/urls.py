@@ -22,7 +22,6 @@ from core.views import dashboard_view
 urlpatterns = [
     path('', lambda request: redirect('/accounts/login/')),
     path('admin/', admin.site.urls),
-    path('accounts/signup/', lambda request: redirect('/accounts/login/')),
     path('accounts/', include('allauth.urls')),
     path('dashboard/', dashboard_view, name='dashboard'),
     path('formulario/', include('formularios.urls')),
