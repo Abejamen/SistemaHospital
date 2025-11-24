@@ -2,22 +2,89 @@ from django import forms
 from .models import Madre, Parto, RecienNacido, VacunaBCG
 
 
-# =====================================================================
-#   FORM MADRE (CORREGIDO COMPLETAMENTE)
-# =====================================================================
+# =======================================================================================
+# LISTAS OFICIALES MINSAL
+# =======================================================================================
+
+TIPO_PARTO_CHOICES = [
+    ("PARTO_VAGINAL", "Parto vaginal"),
+    ("PARTO_VAGINAL_INSTRUMENTAL", "Parto vaginal instrumental (Fórceps / Vacuum)"),
+    ("CESAREA", "Cesárea"),
+    ("CESAREA_URGENCIA", "Cesárea de urgencia"),
+    ("CESAREA_ELECTIVA", "Cesárea electiva"),
+]
+
+CLASIFICACION_ROBSON_CHOICES = [
+    ("G1", "G1 — Nulípara, feto único, cefálico, ≥ 37 sem, trabajo espontáneo"),
+    ("G2A", "G2A — Nulípara, inducción"),
+    ("G2B", "G2B — Nulípara, cesárea antes del trabajo de parto"),
+    ("G3", "G3 — Multípara sin cesárea previa, feto único, cefálico, ≥ 37 sem, espontáneo"),
+    ("G4A", "G4A — Multípara sin cesárea previa, inducción"),
+    ("G4B", "G4B — Multípara sin cesárea previa, cesárea antes del trabajo de parto"),
+    ("G5", "G5 — Cesárea previa, embarazo único, cefálico, ≥ 37 sem"),
+    ("G6", "G6 — Feto podálico"),
+    ("G7", "G7 — Embarazo múltiple"),
+    ("G8", "G8 — Presentación anómala"),
+    ("G9", "G9 — Pretérmino"),
+    ("G10", "G10 — Muerte fetal"),
+]
+
+SEXO_RN_CHOICES = [
+    ("M", "Masculino"),
+    ("F", "Femenino"),
+    ("I", "Indeterminado"),
+]
+
+DESTINO_FINAL_CHOICES = [
+    ("SALA_COMUN", "Sala común"),
+    ("UTI", "Unidad de Tratamiento Intermedio"),
+    ("UCI", "Unidad de Cuidados Intensivos"),
+    ("NEO_INTERMEDIO", "Neonatología Intermedio"),
+    ("NEO_INTENSIVO", "Neonatología Intensivo"),
+    ("DOMICILIO", "Alta a domicilio"),
+]
+
+RESULTADO_LAB_CHOICES = [
+    ("NEGATIVO", "Negativo"),
+    ("POSITIVO", "Positivo"),
+    ("REACTIVO", "Reactivo"),
+    ("NO_REALIZADO", "No realizado"),
+    ("SIN_DATOS", "Sin datos"),
+]
+
+
+# =======================================================================================
+# FORMULARIO MADRE
+# =======================================================================================
+
 class MadreForm(forms.ModelForm):
 
-    # FIX FECHA → esta es la corrección verdadera
     fecha_nacimiento = forms.DateField(
         required=False,
         input_formats=["%Y-%m-%d"],
         widget=forms.DateInput(
             attrs={
                 "type": "date",
-                "class": "form-control"
+                "class": "form-control",
+                "placeholder": "Seleccione fecha de nacimiento",
             },
             format="%Y-%m-%d",
         ),
+        help_text="Seleccione la fecha según documento de identidad.",
+    )
+
+    vdrl_resultado = forms.ChoiceField(
+        choices=RESULTADO_LAB_CHOICES,
+        required=False,
+        help_text="Resultado del test VDRL según laboratorio.",
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    hepatitis_b_resultado = forms.ChoiceField(
+        choices=RESULTADO_LAB_CHOICES,
+        required=False,
+        help_text="Resultado del test Hepatitis B según laboratorio.",
+        widget=forms.Select(attrs={"class": "form-control"})
     )
 
     class Meta:
@@ -39,16 +106,26 @@ class MadreForm(forms.ModelForm):
         ]
 
         widgets = {
-            "rut": forms.TextInput(attrs={
+            "nombre_completo": forms.TextInput(attrs={
+                "placeholder": "Nombre completo de la madre",
                 "class": "form-control",
-                "maxlength": "12",
-                "placeholder": "Ej: 12345678-9"
             }),
+            "rut": forms.TextInput(attrs={
+                "placeholder": "Ej: 12345678-9",
+                "maxlength": "12",
+                "class": "form-control",
+            }),
+            "edad": forms.NumberInput(attrs={
+                "placeholder": "Edad materna",
+                "min": "10",
+                "max": "60",
+            }),
+            "comuna": forms.TextInput(attrs={"placeholder": "Comuna de residencia"}),
+            "cesfam": forms.TextInput(attrs={"placeholder": "CESFAM de control prenatal"}),
         }
 
     def clean_rut(self):
         rut = self.cleaned_data.get("rut")
-
         if not rut:
             raise forms.ValidationError("El RUT es obligatorio.")
 
@@ -64,16 +141,14 @@ class MadreForm(forms.ModelForm):
         numero, dv = rut.split("-")
 
         if not numero.isdigit():
-            raise forms.ValidationError("La parte numérica del RUT solo debe contener números.")
+            raise forms.ValidationError("La parte numérica debe ser solo números.")
 
         if not (dv.isdigit() or dv.lower() == "k"):
-            raise forms.ValidationError("El dígito verificador debe ser número o 'K'.")
+            raise forms.ValidationError("El dígito verificador debe ser número o K.")
 
         query = Madre.objects.filter(rut=rut)
-
         if self.instance.pk:
             query = query.exclude(pk=self.instance.pk)
-
         if query.exists():
             raise forms.ValidationError("Este RUT ya está registrado.")
 
@@ -81,7 +156,6 @@ class MadreForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         for name, field in self.fields.items():
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({"class": "form-check-input"})
@@ -89,9 +163,10 @@ class MadreForm(forms.ModelForm):
                 field.widget.attrs.update({"class": "form-control"})
 
 
-# =====================================================================
-#   FORM PARTO
-# =====================================================================
+# =======================================================================================
+# FORMULARIO PARTO
+# =======================================================================================
+
 class PartoForm(forms.ModelForm):
 
     fecha_parto = forms.DateField(
@@ -100,10 +175,12 @@ class PartoForm(forms.ModelForm):
         widget=forms.DateInput(
             attrs={
                 "type": "date",
-                "class": "form-control"
+                "class": "form-control",
+                "placeholder": "Seleccione fecha de parto",
             },
-            format="%Y-%m-%d"
-        )
+            format="%Y-%m-%d",
+        ),
+        help_text="Fecha del nacimiento registrada clínicamente.",
     )
 
     hora_parto = forms.TimeField(
@@ -111,9 +188,25 @@ class PartoForm(forms.ModelForm):
         widget=forms.TimeInput(
             attrs={
                 "type": "time",
-                "class": "form-control"
+                "class": "form-control",
+                "placeholder": "Hora del parto",
             }
-        )
+        ),
+        help_text="Indique la hora exacta del parto.",
+    )
+
+    tipo_parto = forms.ChoiceField(
+        choices=TIPO_PARTO_CHOICES,
+        required=False,
+        help_text="Seleccione el tipo de parto según registro clínico.",
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    clasificacion_robson = forms.ChoiceField(
+        choices=CLASIFICACION_ROBSON_CHOICES,
+        required=False,
+        help_text="Seleccione la clasificación según el sistema Robson.",
+        widget=forms.Select(attrs={"class": "form-control"})
     )
 
     class Meta:
@@ -152,27 +245,42 @@ class PartoForm(forms.ModelForm):
         ]
 
         widgets = {
-            "observaciones": forms.Textarea(attrs={"rows": 2}),
-            "motivo_no_acompanado": forms.Textarea(attrs={"rows": 2}),
-            "causa_cesarea": forms.Textarea(attrs={"rows": 2}),
+            "profesional_responsable": forms.TextInput(attrs={"placeholder": "Nombre del profesional"}),
+            "observaciones": forms.Textarea(attrs={"rows": 2, "placeholder": "Observaciones clínicas"}),
+            "motivo_no_acompanado": forms.Textarea(attrs={"rows": 2, "placeholder": "Motivo del no acompañamiento"}),
+            "causa_cesarea": forms.Textarea(attrs={"rows": 2, "placeholder": "Causa de cesárea según ficha"}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         for name, field in self.fields.items():
             field.required = False
-
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({"class": "form-check-input"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
 
 
-# =====================================================================
-#   FORM RECIÉN NACIDO
-# =====================================================================
+# =======================================================================================
+# FORMULARIO RN
+# =======================================================================================
+
 class RecienNacidoForm(forms.ModelForm):
+
+    sexo = forms.ChoiceField(
+        choices=SEXO_RN_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={"class": "form-control"}),
+        help_text="Seleccione el sexo asignado al nacer.",
+    )
+
+    destino_final = forms.ChoiceField(
+        choices=DESTINO_FINAL_CHOICES,
+        required=False,
+        widget=forms.Select(attrs={"class": "form-control"}),
+        help_text="Destino clínico del recién nacido.",
+    )
+
     class Meta:
         model = RecienNacido
         fields = [
@@ -200,22 +308,33 @@ class RecienNacidoForm(forms.ModelForm):
             "notas_rn",
         ]
 
+        widgets = {
+            "apellido_paterno": forms.TextInput(attrs={"placeholder": "Apellido paterno"}),
+            "peso": forms.NumberInput(attrs={"placeholder": "Peso en gramos"}),
+            "talla": forms.NumberInput(attrs={"placeholder": "Talla en cm"}),
+            "circunferencia_craneana": forms.NumberInput(attrs={"placeholder": "Circunferencia craneana (cm)"}),
+            "diagnostico": forms.TextInput(attrs={"placeholder": "Diagnóstico clínico"}),
+            "descripcion_malformacion": forms.Textarea(attrs={"rows": 2, "placeholder": "Descripción de la malformación"}),
+            "profesional_vacuna_vhb": forms.TextInput(attrs={"placeholder": "Profesional que aplica VHB"}),
+            "notas_rn": forms.Textarea(attrs={"rows": 2, "placeholder": "Notas clínicas adicionales"}),
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         for name, field in self.fields.items():
             field.required = False
-
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({"class": "form-check-input"})
             else:
                 field.widget.attrs.update({"class": "form-control"})
 
 
-# =====================================================================
-#   FORM VACUNA BCG
-# =====================================================================
+# =======================================================================================
+# FORMULARIO BCG
+# =======================================================================================
+
 class VacunaBCGForm(forms.ModelForm):
+
     class Meta:
         model = VacunaBCG
         fields = [
@@ -226,12 +345,17 @@ class VacunaBCGForm(forms.ModelForm):
             "cama_ubicacion",
         ]
 
+        widgets = {
+            "numero_registro": forms.TextInput(attrs={"placeholder": "N° de registro BCG"}),
+            "comuna": forms.TextInput(attrs={"placeholder": "Comuna donde se aplica"}),
+            "reaccion_adversa": forms.TextInput(attrs={"placeholder": "Descripción de reacción adversa"}),
+            "cama_ubicacion": forms.TextInput(attrs={"placeholder": "Ubicación del RN al momento de vacunación"}),
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         for name, field in self.fields.items():
             field.required = False
-
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({"class": "form-check-input"})
             else:
