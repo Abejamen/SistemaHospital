@@ -4,6 +4,7 @@ from .models import Madre, Parto, RecienNacido, VacunaBCG
 
 
 class MadreForm(forms.ModelForm):
+
     class Meta:
         model = Madre
         fields = [
@@ -23,11 +24,57 @@ class MadreForm(forms.ModelForm):
         ]
 
         widgets = {
+            "rut": forms.TextInput(attrs={
+                "class": "form-control",
+                "maxlength": "12",
+                "placeholder": "Ej: 12345678-9"
+            }),
             "fecha_nacimiento": forms.DateInput(
                 attrs={"type": "date", "class": "form-control"},
                 format="%Y-%m-%d",
             ),
         }
+
+
+    def clean_rut(self):
+        rut = self.cleaned_data.get("rut")
+
+        if not rut:
+            raise forms.ValidationError("El RUT es obligatorio.")
+
+        rut = rut.replace(".", "").replace(" ", "").strip()
+        self.cleaned_data["rut"] = rut
+
+
+        if len(rut) < 8 or len(rut) > 12:
+            raise forms.ValidationError("El RUT no tiene un largo válido.")
+
+
+        if "-" not in rut:
+            raise forms.ValidationError("El RUT debe incluir guion. Ej: 12345678-9")
+
+        numero, dv = rut.split("-")
+
+
+        if not numero.isdigit():
+            raise forms.ValidationError("La parte numérica del RUT solo debe contener números.")
+
+
+        if not (dv.isdigit() or dv.lower() == "k"):
+            raise forms.ValidationError("El dígito verificador debe ser número o 'K'.")
+
+
+        query = Madre.objects.filter(rut=rut)
+
+
+        if self.instance.pk:
+            query = query.exclude(pk=self.instance.pk)
+
+        if query.exists():
+            raise forms.ValidationError("Este RUT ya está registrado.")
+
+        return rut
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -87,6 +134,7 @@ class PartoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
         for name, field in self.fields.items():
             field.required = False
 
@@ -128,7 +176,10 @@ class RecienNacidoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
         for name, field in self.fields.items():
+            field.required = False
+
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({"class": "form-check-input"})
             else:
@@ -150,7 +201,10 @@ class VacunaBCGForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+
         for name, field in self.fields.items():
+            field.required = False
+
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({"class": "form-check-input"})
             else:

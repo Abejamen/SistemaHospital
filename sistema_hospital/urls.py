@@ -9,7 +9,7 @@ from core.views import (
     supervisor_revisar,
     ver_formulario_verificado,
     supervisor_dashboard,
-    dashboard_historial_formularios,  # ← AGREGADO
+    dashboard_historial_formularios, 
 )
 
 urlpatterns = [
@@ -25,7 +25,7 @@ urlpatterns = [
     path('dashboard/supervisor/', supervisor_dashboard, name='supervisor_dashboard'),
     path('dashboard/supervisor/verificacion/', supervisor_dashboard_listado, name='supervisor_dashboard_listado'),
     path('dashboard/supervisor/listado/', supervisor_dashboard_listado, name="supervisor_listado"),
-    path('dashboard/supervisor/historial/', dashboard_historial_formularios, name='dashboard_historial_formularios'),  # ← AGREGADO
+    path('dashboard/supervisor/historial/', dashboard_historial_formularios, name='dashboard_historial_formularios'), 
 
     path('supervisor/revisar/<int:id>/', supervisor_revisar, name='supervisor_revisar'),
 

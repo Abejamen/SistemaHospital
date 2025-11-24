@@ -11,7 +11,7 @@ class Madre(models.Model):
     ]
 
     nombre_completo = models.CharField(max_length=150)
-    rut = models.CharField(max_length=20, null=True, blank=True)
+    rut = models.CharField(max_length=12, unique=True, null=True, blank=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
     edad = models.IntegerField(null=True, blank=True)
     comuna = models.CharField(max_length=100, null=True, blank=True)

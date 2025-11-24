@@ -19,13 +19,27 @@
         {% endif %}
     </h3>
 
+
+    {% if madre_form.errors %}
+    <div class="alert alert-danger shadow-sm">
+        <strong>Corrige los siguientes errores:</strong>
+        <ul class="mt-2 mb-0">
+            {% for field, errors in madre_form.errors.items %}
+                {% for error in errors %}
+                    <li><strong>{{ field }}:</strong> {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
     {% if error %}
     <div class="alert alert-danger shadow-sm">{{ error }}</div>
     {% endif %}
 
     <form method="post">
         {% csrf_token %}
-
 
         <div class="card shadow-lg border-0 mb-4" style="border-radius:20px;">
             <div class="card-header text-white fw-bold py-3"
@@ -106,8 +120,6 @@
 
             </div>
         </div>
-
-
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="chkParto" name="incluir_parto"
                    {% if incluir_parto %}checked{% endif %}>
@@ -115,7 +127,6 @@
                 Registrar / Editar datos de Parto
             </label>
         </div>
-
 
         <div id="partoSection" class="card shadow-lg border-0 mb-4 {% if not incluir_parto %}d-none{% endif %}"
              style="border-radius:20px;">
@@ -193,7 +204,6 @@
                     <label class="form-label fw-semibold">Observaciones</label>
                     {{ parto_form.observaciones }}
                 </div>
-
 
                 <div class="row mb-3">
                     <div class="col-md-3">
@@ -353,7 +363,7 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Diagnóstico</label>
-                    {{ rn_form.diagnostostico }}
+                    {{ rn_form.diagnostico }}
                 </div>
 
                 <div class="row mb-3">
@@ -432,6 +442,7 @@
 
             </div>
         </div>
+
 
 
         <div class="form-check mb-3">
@@ -521,23 +532,24 @@
             </div>
         </div>
 
-    <div class="d-flex justify-content-end gap-2 mb-4">
-    
-        <button name="accion" value="guardar_borrador"
-                class="btn btn-secondary btn-lg px-4 shadow-sm" style="border-radius:12px;">
-            Guardar borrador
-        </button>
 
-        <button name="accion" value="enviar_supervisor"
-                class="btn btn-primary btn-lg px-4 shadow-sm" style="border-radius:12px;">
-            Enviar al supervisor
-        </button>
+        <div class="d-flex justify-content-end gap-2 mb-4">
 
-    </div>
+            <button name="accion" value="guardar_borrador"
+                    class="btn btn-secondary btn-lg px-4 shadow-sm" style="border-radius:12px;">
+                Guardar borrador
+            </button>
 
+            <button name="accion" value="enviar_supervisor"
+                    class="btn btn-primary btn-lg px-4 shadow-sm" style="border-radius:12px;">
+                Enviar al supervisor
+            </button>
+
+        </div>
 
     </form>
 </div>
+
 
 <script>
     const chkParto = document.getElementById("chkParto");
