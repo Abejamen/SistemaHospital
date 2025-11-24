@@ -6,6 +6,10 @@ from formularios.models import Madre, Parto, RecienNacido, VacunaBCG
 from django.utils import timezone
 
 
+# ================================
+# DASHBOARD
+# ================================
+
 @login_required
 def dashboard_view(request):
     if request.user.role == "ADMIN":
@@ -83,7 +87,6 @@ def supervisor_dashboard_listado(request):
 
 @login_required
 def dashboard_historial_formularios(request):
-    """ Muestra TODOS los formularios creados por TODAS las matronas """
     if request.user.role != "SUPERVISOR":
         return redirect("dashboard_view")
 
@@ -94,6 +97,10 @@ def dashboard_historial_formularios(request):
     })
 
 
+# ================================
+# REVISAR DEL SUPERVISOR
+# ================================
+
 @login_required
 def supervisor_revisar(request, id):
     if request.user.role != "SUPERVISOR":
@@ -102,7 +109,7 @@ def supervisor_revisar(request, id):
     madre = get_object_or_404(Madre, pk=id)
     parto = Parto.objects.filter(madre=madre).first()
     rn = RecienNacido.objects.filter(parto=parto).first() if parto else None
-    bcg = VacunaBCG.objects.filter(rn=rn).first() if rn else None 
+    bcg = VacunaBCG.objects.filter(rn=rn).first() if rn else None
 
     if request.method == "POST":
         accion = request.POST.get("accion")
@@ -122,7 +129,7 @@ def supervisor_revisar(request, id):
         "madre": madre,
         "parto": parto,
         "rn": rn,
-        "bcg": bcg,  
+        "bcg": bcg,
     })
 
 
@@ -148,8 +155,13 @@ def ver_formulario_verificado(request, id):
     })
 
 
+# ================================
+# FORMULARIO ÚNICO
+# ================================
+
 @login_required
 def formulario_unico(request, id):
+
     madre = None
     parto = None
     rn = None
@@ -159,8 +171,7 @@ def formulario_unico(request, id):
         madre = get_object_or_404(Madre, pk=id)
         parto = Parto.objects.filter(madre=madre).first()
         rn = RecienNacido.objects.filter(parto=parto).first() if parto else None
-        if rn:
-            bcg = VacunaBCG.objects.filter(rn=rn).first()
+        bcg = VacunaBCG.objects.filter(rn=rn).first() if rn else None
 
         if madre.estado == "APROBADO" and request.user.role == "MATRONA":
             return render(request, "sin_rol.html", {
@@ -170,14 +181,27 @@ def formulario_unico(request, id):
     from formularios.forms import MadreForm, PartoForm, RecienNacidoForm, VacunaBCGForm
 
     if request.method == "POST":
+
         incluir_parto = request.POST.get("incluir_parto") == "on"
         incluir_rn = request.POST.get("incluir_rn") == "on"
         incluir_bcg = request.POST.get("incluir_bcg") == "on"
 
         madre_form = MadreForm(request.POST, instance=madre)
-        parto_form = PartoForm(request.POST, instance=parto if incluir_parto else None)
-        rn_form = RecienNacidoForm(request.POST, instance=rn if incluir_rn else None)
-        bcg_form = VacunaBCGForm(request.POST, instance=bcg if incluir_bcg else None)
+
+        parto_form = PartoForm(
+            request.POST if incluir_parto else None,
+            instance=parto if incluir_parto else None
+        )
+
+        rn_form = RecienNacidoForm(
+            request.POST if incluir_rn else None,
+            instance=rn if incluir_rn else None
+        )
+
+        bcg_form = VacunaBCGForm(
+            request.POST if incluir_bcg else None,
+            instance=bcg if incluir_bcg else None
+        )
 
         forms_ok = madre_form.is_valid()
         if incluir_parto:
@@ -199,17 +223,14 @@ def formulario_unico(request, id):
                 "bcg": bcg,
                 "incluir_parto": incluir_parto,
                 "incluir_rn": incluir_rn,
-                "incluir_bcg": incluir_bcg,
-                "error": None,
+                "incluir_bcg": incluir_bcg
             })
 
         madre_obj = madre_form.save(commit=False)
-
         if madre_obj.creado_por_id is None:
             madre_obj.creado_por = request.user
 
         accion = request.POST.get("accion")
-
         if accion == "enviar_supervisor":
             madre_obj.estado = "ENVIADO"
             madre_obj.fecha_envio = timezone.now()
@@ -225,17 +246,12 @@ def formulario_unico(request, id):
             parto_obj = parto_form.save(commit=False)
             parto_obj.madre = madre_obj
             parto_obj.save()
-        else:
-            parto_obj = parto
 
         rn_obj = None
-        if incluir_rn:
+        if incluir_rn and parto_obj:
             rn_obj = rn_form.save(commit=False)
-            if parto_obj:
-                rn_obj.parto = parto_obj
+            rn_obj.parto = parto_obj
             rn_obj.save()
-        else:
-            rn_obj = rn
 
         if incluir_bcg and rn_obj:
             bcg_obj = bcg_form.save(commit=False)
@@ -247,7 +263,6 @@ def formulario_unico(request, id):
     madre_form = MadreForm(instance=madre)
     parto_form = PartoForm(instance=parto) if parto else PartoForm()
     rn_form = RecienNacidoForm(instance=rn) if rn else RecienNacidoForm()
-    from formularios.forms import VacunaBCGForm
     bcg_form = VacunaBCGForm(instance=bcg) if bcg else VacunaBCGForm()
 
     incluir_parto = bool(parto)

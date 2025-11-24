@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+
+    <a href="javascript:history.back()" class="btn btn-outline-secondary mb-3">
+        <i class="fa-solid fa-arrow-left"></i> Regresar
+    </a>
+
+    <h2 class="fw-bold mb-4">Exportar Formularios</h2>
+
+    <div class="row justify-content-start mt-4">
+
+        <!-- EXPORTAR TODOS Excel -->
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'formularios:exportar_todos_excel' %}" class="text-decoration-none">
+                <div class="admin-mini-card shadow-sm text-center">
+                    <i class="fa-solid fa-file-excel admin-mini-icon text-primary"></i>
+                    <span class="admin-mini-text">Exportar TODOS a Excel</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- EXPORTAR TODOS PDF -->
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'formularios:exportar_todos_pdf' %}" class="text-decoration-none">
+                <div class="admin-mini-card shadow-sm text-center">
+                    <i class="fa-solid fa-file-pdf admin-mini-icon text-primary"></i>
+                    <span class="admin-mini-text">Exportar TODOS a PDF</span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

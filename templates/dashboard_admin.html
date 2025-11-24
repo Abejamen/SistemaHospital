@@ -8,7 +8,7 @@
 
     <div class="row justify-content-start mt-4">
 
-
+        <!-- Gestión de Usuarios -->
         <div class="col-md-3 mb-3">
             <a href="{% url 'admin_usuarios_lista' %}" class="text-decoration-none">
                 <div class="admin-mini-card shadow-sm">
@@ -18,7 +18,7 @@
             </a>
         </div>
 
-
+        <!-- Panel Django -->
         <div class="col-md-3 mb-3">
             <a href="/admin/" class="text-decoration-none" target="_blank">
                 <div class="admin-mini-card shadow-sm">
@@ -28,7 +28,7 @@
             </a>
         </div>
 
-
+        <!-- Reportes -->
         <div class="col-md-3 mb-3">
             <a href="#" class="text-decoration-none">
                 <div class="admin-mini-card shadow-sm">
@@ -38,12 +38,22 @@
             </a>
         </div>
 
-
+        <!-- Auditoría -->
         <div class="col-md-3 mb-3">
             <a href="#" class="text-decoration-none">
                 <div class="admin-mini-card shadow-sm">
                     <i class="fa-solid fa-shield-heart admin-mini-icon"></i>
                     <span class="admin-mini-text">Auditoría</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- NUEVO: Importar / Exportar -->
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'formularios:menu_import_export' %}" class="text-decoration-none">
+                <div class="admin-mini-card shadow-sm">
+                    <i class="fa-solid fa-file-export admin-mini-icon"></i>
+                    <span class="admin-mini-text">Exportar</span>
                 </div>
             </a>
         </div>

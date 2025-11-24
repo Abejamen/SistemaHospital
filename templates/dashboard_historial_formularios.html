@@ -8,7 +8,7 @@
         <i class="fa-solid fa-arrow-left"></i> Volver
     </a>
 
-    <h2 class="fw-bold mb-4">Historial de Formularios</h2>
+    <h2 class="fw-bold mb-4">Historial de Formularios e exportacion</h2>
 
     <div class="alert alert-secondary">
         Listado completo de todos los formularios creados por las matronas.
@@ -50,13 +50,28 @@
                         </td>
 
                         <td>{{ f.creado_por.first_name }} {{ f.creado_por.last_name }}</td>
-
                         <td>{{ f.fecha_creacion|date:"d/m/Y H:i" }}</td>
 
-                        <td>
-                            <a href="{% url 'supervisor_revisar' f.id %}" class="btn btn-outline-primary btn-sm">
-                                Ver
+                        <td class="d-flex gap-1">
+
+                            <!-- Botón Ver -->
+                            <a href="{% url 'supervisor_revisar' f.id %}" 
+                               class="btn btn-outline-primary btn-sm" title="Ver">
+                                <i class="fa-solid fa-eye"></i>
                             </a>
+
+                            <!-- Botón Exportar PDF -->
+                            <a href="{% url 'formularios:exportar_pdf_individual' f.id %}" 
+                               class="btn btn-danger btn-sm" title="Descargar PDF">
+                                <i class="fa-solid fa-file-pdf"></i>
+                            </a>
+
+                            <!-- Botón Exportar Excel -->
+                            <a href="{% url 'formularios:exportar_excel_individual' f.id %}" 
+                               class="btn btn-success btn-sm" title="Descargar Excel">
+                                <i class="fa-solid fa-file-excel"></i>
+                            </a>
+
                         </td>
                     </tr>
 

@@ -5,6 +5,9 @@ from django.contrib import messages
 from .models import Madre, Parto, RecienNacido, VacunaBCG
 from .forms import MadreForm, PartoForm, RecienNacidoForm, VacunaBCGForm
 from django.shortcuts import render
+from .models import Madre
+from .utils_export_excel import exportar_formularios_excel
+from .utils_export_pdf import exportar_formularios_pdf
 
 
 @login_required
@@ -194,3 +197,40 @@ def supervisor_rechazar(request, id):
 
     messages.error(request, "Formulario rechazado. La matrona podrá editarlo nuevamente.")
     return redirect("/supervisor/pendientes/")
+
+
+
+@login_required
+def menu_import_export(request):
+    return render(request, "formularios_menu_import_export.html")
+
+@login_required
+def exportar_todos_excel(request):
+    madres = Madre.objects.all()
+    return exportar_formularios_excel(madres)
+
+
+@login_required
+def exportar_verificados_excel(request):
+    madres = Madre.objects.filter(aprobado=True)
+    return exportar_formularios_excel(madres)
+
+
+@login_required
+def exportar_todos_pdf(request):
+    madres = Madre.objects.all()
+    return exportar_formularios_pdf(madres)
+
+
+@login_required
+def exportar_verificados_pdf(request):
+    madres = Madre.objects.filter(aprobado=True)
+    return exportar_formularios_pdf(madres)
+
+
+def exportar_excel_individual(request, id):
+    return exportar_formularios_excel(Madre.objects.filter(id=id))
+
+
+def exportar_pdf_individual(request, id):
+    return exportar_formularios_pdf(Madre.objects.filter(id=id))

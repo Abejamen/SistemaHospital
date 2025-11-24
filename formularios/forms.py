@@ -2,8 +2,23 @@ from django import forms
 from .models import Madre, Parto, RecienNacido, VacunaBCG
 
 
-
+# =====================================================================
+#   FORM MADRE (CORREGIDO COMPLETAMENTE)
+# =====================================================================
 class MadreForm(forms.ModelForm):
+
+    # FIX FECHA → esta es la corrección verdadera
+    fecha_nacimiento = forms.DateField(
+        required=False,
+        input_formats=["%Y-%m-%d"],
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+                "class": "form-control"
+            },
+            format="%Y-%m-%d",
+        ),
+    )
 
     class Meta:
         model = Madre
@@ -29,12 +44,7 @@ class MadreForm(forms.ModelForm):
                 "maxlength": "12",
                 "placeholder": "Ej: 12345678-9"
             }),
-            "fecha_nacimiento": forms.DateInput(
-                attrs={"type": "date", "class": "form-control"},
-                format="%Y-%m-%d",
-            ),
         }
-
 
     def clean_rut(self):
         rut = self.cleaned_data.get("rut")
@@ -45,27 +55,21 @@ class MadreForm(forms.ModelForm):
         rut = rut.replace(".", "").replace(" ", "").strip()
         self.cleaned_data["rut"] = rut
 
-
         if len(rut) < 8 or len(rut) > 12:
             raise forms.ValidationError("El RUT no tiene un largo válido.")
-
 
         if "-" not in rut:
             raise forms.ValidationError("El RUT debe incluir guion. Ej: 12345678-9")
 
         numero, dv = rut.split("-")
 
-
         if not numero.isdigit():
             raise forms.ValidationError("La parte numérica del RUT solo debe contener números.")
-
 
         if not (dv.isdigit() or dv.lower() == "k"):
             raise forms.ValidationError("El dígito verificador debe ser número o 'K'.")
 
-
         query = Madre.objects.filter(rut=rut)
-
 
         if self.instance.pk:
             query = query.exclude(pk=self.instance.pk)
@@ -74,7 +78,6 @@ class MadreForm(forms.ModelForm):
             raise forms.ValidationError("Este RUT ya está registrado.")
 
         return rut
-
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -86,8 +89,33 @@ class MadreForm(forms.ModelForm):
                 field.widget.attrs.update({"class": "form-control"})
 
 
-
+# =====================================================================
+#   FORM PARTO
+# =====================================================================
 class PartoForm(forms.ModelForm):
+
+    fecha_parto = forms.DateField(
+        required=False,
+        input_formats=["%Y-%m-%d"],
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+                "class": "form-control"
+            },
+            format="%Y-%m-%d"
+        )
+    )
+
+    hora_parto = forms.TimeField(
+        required=False,
+        widget=forms.TimeInput(
+            attrs={
+                "type": "time",
+                "class": "form-control"
+            }
+        )
+    )
+
     class Meta:
         model = Parto
         fields = [
@@ -124,8 +152,6 @@ class PartoForm(forms.ModelForm):
         ]
 
         widgets = {
-            "fecha_parto": forms.DateInput(attrs={"type": "date"}),
-            "hora_parto": forms.TimeInput(attrs={"type": "time"}),
             "observaciones": forms.Textarea(attrs={"rows": 2}),
             "motivo_no_acompanado": forms.Textarea(attrs={"rows": 2}),
             "causa_cesarea": forms.Textarea(attrs={"rows": 2}),
@@ -133,7 +159,6 @@ class PartoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
 
         for name, field in self.fields.items():
             field.required = False
@@ -144,7 +169,9 @@ class PartoForm(forms.ModelForm):
                 field.widget.attrs.update({"class": "form-control"})
 
 
-
+# =====================================================================
+#   FORM RECIÉN NACIDO
+# =====================================================================
 class RecienNacidoForm(forms.ModelForm):
     class Meta:
         model = RecienNacido
@@ -176,7 +203,6 @@ class RecienNacidoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-
         for name, field in self.fields.items():
             field.required = False
 
@@ -186,7 +212,9 @@ class RecienNacidoForm(forms.ModelForm):
                 field.widget.attrs.update({"class": "form-control"})
 
 
-
+# =====================================================================
+#   FORM VACUNA BCG
+# =====================================================================
 class VacunaBCGForm(forms.ModelForm):
     class Meta:
         model = VacunaBCG
@@ -200,7 +228,6 @@ class VacunaBCGForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
 
         for name, field in self.fields.items():
             field.required = False

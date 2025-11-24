@@ -8,28 +8,33 @@
 
     <div class="row justify-content-start mt-4">
 
-
+        <!-- Verificación de Formularios -->
         <div class="col-md-3 mb-3">
             <a href="{% url 'supervisor_dashboard_listado' %}" class="text-decoration-none">
                 <div class="admin-mini-card shadow-sm">
-
                     <i class="fa-solid fa-clipboard-check admin-mini-icon"></i>
-
                     <span class="admin-mini-text">Verificación de Formularios</span>
-
                 </div>
             </a>
         </div>
 
-
+        <!-- Historial de Formularios -->
         <div class="col-md-3 mb-3">
             <a href="{% url 'dashboard_historial_formularios' %}" class="text-decoration-none">
                 <div class="admin-mini-card shadow-sm">
-
                     <i class="fa-solid fa-folder-open admin-mini-icon"></i>
+                    <span class="admin-mini-text">Historial de Formularios e exportacion individual</span>
+                </div>
+            </a>
+        </div>
 
-                    <span class="admin-mini-text">Historial de Formularios</span>
-
+        <!-- NUEVO: Importar / Exportar -->
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'formularios:menu_import_export' %}" class="text-decoration-none">
+                <div class="admin-mini-card shadow-sm">
+                    <i class="fa-solid fa-file-export admin-mini-icon"></i>
+                    <span class="admin-mini-text">Exportacion todas las tablas
+                    </span>
                 </div>
             </a>
         </div>
