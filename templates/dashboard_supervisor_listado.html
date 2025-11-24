@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-4">
+
+    <a href="{% url 'supervisor_dashboard' %}" class="btn btn-outline-secondary mb-3">
+        <i class="fa-solid fa-arrow-left"></i> Volver
+    </a>
+
+    <h2 class="fw-bold mb-4">Verificación de Formularios</h2>
+
+    <div class="alert alert-info">
+        Revisa, aprueba o rechaza los formularios enviados por las matronas.
+    </div>
+
+    <h4 class="fw-semibold mt-4 mb-3">
+        <i class="fa-solid fa-clock text-warning"></i> Pendientes
+    </h4>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-warning">
+                    <tr>
+                        <th>Madre</th>
+                        <th>RUT</th>
+                        <th>Fecha Envío</th>
+                        <th>Creado Por</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in pendientes %}
+                    <tr>
+                        <td>{{ m.nombre_completo }}</td>
+                        <td>{{ m.rut }}</td>
+                        <td>{{ m.fecha_envio|date:"d/m/Y H:i" }}</td>
+                        <td>{{ m.creado_por.first_name }} {{ m.creado_por.last_name }}</td>
+                        <td>
+                            <a href="{% url 'supervisor_revisar' m.id %}" class="btn btn-primary btn-sm">
+                                Revisar
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-3">No hay formularios pendientes.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h4 class="fw-semibold mt-4 mb-3">
+        <i class="fa-solid fa-circle-check text-success"></i> Aprobados
+    </h4>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-success">
+                    <tr>
+                        <th>Madre</th>
+                        <th>RUT</th>
+                        <th>Validado Por</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in aprobados %}
+                    <tr>
+                        <td>{{ m.nombre_completo }}</td>
+                        <td>{{ m.rut }}</td>
+                        <td>{{ m.validado_por.first_name }} {{ m.validado_por.last_name }}</td>
+                        <td>{{ m.fecha_validacion|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-3">No hay aprobados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h4 class="fw-semibold mt-4 mb-3">
+        <i class="fa-solid fa-circle-xmark text-danger"></i> Rechazados
+    </h4>
+
+    <div class="card shadow-sm mb-5">
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-danger">
+                    <tr>
+                        <th>Madre</th>
+                        <th>RUT</th>
+                        <th>Validado Por</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in rechazados %}
+                    <tr>
+                        <td>{{ m.nombre_completo }}</td>
+                        <td>{{ m.rut }}</td>
+                        <td>{{ m.validado_por.first_name }} {{ m.validado_por.last_name }}</td>
+                        <td>{{ m.fecha_validacion|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-3">No hay rechazados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

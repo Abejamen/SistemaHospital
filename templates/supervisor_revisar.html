@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-4">
+
+    <a href="{% url 'supervisor_dashboard_listado' %}" class="btn btn-outline-secondary mb-3">
+        <i class="fa-solid fa-arrow-left"></i> Volver
+    </a>
+
+    <h2 class="fw-bold mb-4" style="color:#1a3d7c;">
+        Revisión de Formulario — {{ madre.nombre_completo }}
+    </h2>
+
+
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white fw-bold">Datos de la Madre</div>
+        <div class="card-body">
+
+            <p><strong>Nombre:</strong> {{ madre.nombre_completo }}</p>
+            <p><strong>RUT:</strong> {{ madre.rut }}</p>
+            <p><strong>Fecha nacimiento:</strong> {{ madre.fecha_nacimiento }}</p>
+            <p><strong>Edad:</strong> {{ madre.edad }}</p>
+            <p><strong>Comuna:</strong> {{ madre.comuna }}</p>
+            <p><strong>CESFAM:</strong> {{ madre.cesfam }}</p>
+
+            <p><strong>Migrante:</strong> {{ madre.migrante|yesno:"Sí,No" }}</p>
+            <p><strong>Pueblo originario:</strong> {{ madre.pueblo_originario|yesno:"Sí,No" }}</p>
+            <p><strong>VIH positivo:</strong> {{ madre.vih_positivo|yesno:"Sí,No" }}</p>
+            <p><strong>VDRL resultado:</strong> {{ madre.vdrl_resultado }}</p>
+            <p><strong>Tratamiento VDRL:</strong> {{ madre.vdrl_tratamiento|yesno:"Sí,No" }}</p>
+            <p><strong>Hepatitis B resultado:</strong> {{ madre.hepatitis_b_resultado }}</p>
+
+        </div>
+    </div>
+
+
+
+    {% if parto %}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white fw-bold">Datos del Parto</div>
+        <div class="card-body">
+
+            <p><strong>Fecha:</strong> {{ parto.fecha_parto }}</p>
+            <p><strong>Hora:</strong> {{ parto.hora_parto }}</p>
+            <p><strong>Tipo de Parto:</strong> {{ parto.tipo_parto }}</p>
+            <p><strong>Profesional responsable:</strong> {{ parto.profesional_responsable }}</p>
+
+            <hr>
+
+            <h5 class="fw-bold">Intervenciones y Procedimientos</h5>
+            <p><strong>Monitor:</strong> {{ parto.monitor|yesno:"Sí,No" }}</p>
+            <p><strong>TTC:</strong> {{ parto.ttc|yesno:"Sí,No" }}</p>
+            <p><strong>Inducción:</strong> {{ parto.induccion|yesno:"Sí,No" }}</p>
+            <p><strong>Plan de parto:</strong> {{ parto.plan_parto|yesno:"Sí,No" }}</p>
+            <p><strong>Alumbramiento rígido:</strong> {{ parto.alumbramiento_rigido|yesno:"Sí,No" }}</p>
+            <p><strong>Manejo dolor farmacológico:</strong> {{ parto.manejo_dolor_farmacologico|yesno:"Sí,No" }}</p>
+
+            <hr>
+
+            <h5 class="fw-bold">Acompañamiento</h5>
+            <p><strong>Acompañante en parto:</strong> {{ parto.acompanante_parto|yesno:"Sí,No" }}</p>
+            <p><strong>Persona acompañante:</strong> {{ parto.persona_acompanante }}</p>
+            <p><strong>Motivo no acompañado:</strong> {{ parto.motivo_no_acompanado }}</p>
+            <p><strong>Acompañante corta cordón:</strong> {{ parto.acompanante_corta_cordon|yesno:"Sí,No" }}</p>
+
+            <hr>
+
+            <h5 class="fw-bold">Información Clínica</h5>
+            <p><strong>IVE Causal 2:</strong> {{ parto.ive_causal2|yesno:"Sí,No" }}</p>
+            <p><strong>Acompañante en pabellón:</strong> {{ parto.acompanante_pabellon|yesno:"Sí,No" }}</p>
+            <p><strong>Clampeo tardío:</strong> {{ parto.clampeo_tardio|yesno:"Sí,No" }}</p>
+            <p><strong>Gases cordón:</strong> {{ parto.gases_cordon|yesno:"Sí,No" }}</p>
+
+            <p><strong>Apego canguro:</strong> {{ parto.apego_canguro|yesno:"Sí,No" }}</p>
+            <p><strong>Apego túnel:</strong> {{ parto.apego_tunel|yesno:"Sí,No" }}</p>
+
+            <p><strong>Edad gestacional:</strong> 
+                {{ parto.edad_gestacional_semanas }} semanas, 
+                {{ parto.edad_gestacional_dias }} días
+            </p>
+
+            <p><strong>Clasificación Robson:</strong> {{ parto.clasificacion_robson }}</p>
+
+            <hr>
+
+            <p><strong>Causa cesárea:</strong> {{ parto.causa_cesarea }}</p>
+            <p><strong>Uso sala SAIP:</strong> {{ parto.uso_sala_saip|yesno:"Sí,No" }}</p>
+            <p><strong>Recuerdos:</strong> {{ parto.recuerdos|yesno:"Sí,No" }}</p>
+            <p><strong>Retira placenta:</strong> {{ parto.retira_placenta|yesno:"Sí,No" }}</p>
+            <p><strong>Estampado placenta:</strong> {{ parto.estampado_placenta|yesno:"Sí,No" }}</p>
+
+            <p><strong>Alumno presente:</strong> {{ parto.alumno }}</p>
+
+            <p><strong>Observaciones:</strong> {{ parto.observaciones }}</p>
+
+        </div>
+    </div>
+    {% endif %}
+
+
+
+    {% if rn %}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-warning fw-bold">Datos del Recién Nacido</div>
+        <div class="card-body">
+
+            <p><strong>Apellido paterno:</strong> {{ rn.apellido_paterno }}</p>
+            <p><strong>Sexo:</strong> {{ rn.sexo }}</p>
+            <p><strong>Peso:</strong> {{ rn.peso }} g</p>
+            <p><strong>Talla:</strong> {{ rn.talla }} cm</p>
+            <p><strong>Circunferencia craneana:</strong> {{ rn.circunferencia_craneana }} cm</p>
+
+            <p><strong>Diagnóstico:</strong> {{ rn.diagnostico }}</p>
+            <p><strong>Malformación congénita:</strong> {{ rn.malformacion_congenita|yesno:"Sí,No" }}</p>
+            <p><strong>Descripción:</strong> {{ rn.descripcion_malformacion }}</p>
+
+            <p><strong>APGAR 1:</strong> {{ rn.apgar_1 }}</p>
+            <p><strong>APGAR 5:</strong> {{ rn.apgar_5 }}</p>
+
+            <p><strong>Reanimación básica:</strong> {{ rn.reanimacion_basica|yesno:"Sí,No" }}</p>
+            <p><strong>Reanimación avanzada:</strong> {{ rn.reanimacion_avanzada|yesno:"Sí,No" }}</p>
+
+            <p><strong>Profilaxis ocular:</strong> {{ rn.profilaxis_ocular|yesno:"Sí,No" }}</p>
+            <p><strong>Vacuna Hepatitis B:</strong> {{ rn.vacuna_hepatitis_b|yesno:"Sí,No" }}</p>
+            <p><strong>Vacuna BCG:</strong> {{ rn.vacuna_bcg|yesno:"Sí,No" }}</p>
+
+            <p><strong>Profesional vacuna VHB:</strong> {{ rn.profesional_vacuna_vhb }}</p>
+
+            <p><strong>Edad gestacional RN:</strong> 
+                {{ rn.semanas_gestacion }} semanas,
+                {{ rn.dias_gestacion }} días
+            </p>
+
+            <p><strong>Apego inmediato:</strong> {{ rn.apego_inmediato|yesno:"Sí,No" }}</p>
+
+            <p><strong>Destino final:</strong> {{ rn.destino_final }}</p>
+
+            <p><strong>Notas:</strong> {{ rn.notas_rn }}</p>
+
+        </div>
+    </div>
+    {% endif %}
+
+
+
+    {% if bcg %}
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white fw-bold">
+            Vacuna BCG
+        </div>
+
+        <div class="card-body">
+
+            <p><strong>Número registro:</strong> {{ bcg.numero_registro }}</p>
+
+            <p><strong>Aplicada:</strong> {{ bcg.aplicada|yesno:"Sí,No" }}</p>
+
+            <p><strong>Comuna:</strong> {{ bcg.comuna }}</p>
+
+            <p><strong>Reacción adversa:</strong> {{ bcg.reaccion_adversa }}</p>
+
+            <p><strong>Cama / Ubicación:</strong> {{ bcg.cama_ubicacion }}</p>
+
+            <hr>
+
+            <h5 class="fw-bold mt-3">Datos automáticos</h5>
+
+            <p><strong>Nombre madre:</strong> {{ bcg.nombre_completo_madre }}</p>
+
+            <p><strong>RUT madre:</strong> {{ bcg.rut_madre }}</p>
+
+            <p><strong>Fecha nacimiento madre:</strong> {{ bcg.fecha_nacimiento_madre }}</p>
+
+            <p><strong>Fecha nacimiento RN:</strong> {{ bcg.fecha_nacimiento_hijo }}</p>
+
+            <p><strong>Sexo RN:</strong> {{ bcg.sexo_rn }}</p>
+
+            <p><strong>Peso RN:</strong> {{ bcg.peso_rn }}</p>
+
+        </div>
+    </div>
+
+    {% endif %}
+
+
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="d-flex justify-content-end gap-3">
+
+            <button name="accion" value="rechazar"
+                class="btn btn-danger btn-lg px-4">
+                Rechazar
+            </button>
+
+            <button name="accion" value="aprobar"
+                class="btn btn-success btn-lg px-4">
+                Aprobar
+            </button>
+
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

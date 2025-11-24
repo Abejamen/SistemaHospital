@@ -1,7 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+from django.contrib import messages
 from .models import Madre, Parto, RecienNacido, VacunaBCG
 from .forms import MadreForm, PartoForm, RecienNacidoForm, VacunaBCGForm
+from django.shortcuts import render
 
 
 @login_required
@@ -13,13 +16,22 @@ def formulario_unico(request, id):
 
     if id != 0:
         madre = get_object_or_404(Madre, pk=id)
+
+        if madre.creado_por != request.user and request.user.role == "MATRONA":
+            messages.error(request, "No puedes editar formularios creados por otra persona.")
+            return redirect("/dashboard/")
+
+        if madre.estado in ["ENVIADO", "APROBADO"] and request.user.role == "MATRONA":
+            messages.error(request, "Este formulario ya fue enviado al supervisor y no puede ser editado.")
+            return redirect("/dashboard/")
+
         parto = Parto.objects.filter(madre=madre).first()
-        if parto:
-            rn = RecienNacido.objects.filter(parto=parto).first()
-            if rn:
-                bcg = VacunaBCG.objects.filter(rn=rn).first()
+        rn = RecienNacido.objects.filter(parto=parto).first() if parto else None
+        bcg = VacunaBCG.objects.filter(rn=rn).first() if rn else None
 
     if request.method == "POST":
+        accion = request.POST.get("accion", "guardar_borrador")
+
         incluir_parto = request.POST.get("incluir_parto") == "on"
         incluir_rn = request.POST.get("incluir_rn") == "on"
         incluir_bcg = request.POST.get("incluir_bcg") == "on"
@@ -57,29 +69,39 @@ def formulario_unico(request, id):
             })
 
         madre_obj = madre_form.save(commit=False)
+
         if madre_obj.creado_por_id is None:
             madre_obj.creado_por = request.user
+
+        if accion == "enviar_supervisor":
+            madre_obj.estado = "ENVIADO"
+            madre_obj.fecha_envio = timezone.now()
+        else:
+            madre_obj.estado = "BORRADOR"
+
         madre_obj.save()
 
         parto_obj = parto
-        if incluir_parto:
-            if parto_form.is_valid():
-                parto_obj = parto_form.save(commit=False)
-                parto_obj.madre = madre_obj
-                parto_obj.save()
+        if incluir_parto and parto_form.is_valid():
+            parto_obj = parto_form.save(commit=False)
+            parto_obj.madre = madre_obj
+            parto_obj.save()
 
         rn_obj = rn
-        if incluir_rn and parto_obj:
-            if rn_form.is_valid():
-                rn_obj = rn_form.save(commit=False)
-                rn_obj.parto = parto_obj
-                rn_obj.save()
+        if incluir_rn and parto_obj and rn_form.is_valid():
+            rn_obj = rn_form.save(commit=False)
+            rn_obj.parto = parto_obj
+            rn_obj.save()
 
-        if incluir_bcg and rn_obj:
-            if bcg_form.is_valid():
-                bcg_obj = bcg_form.save(commit=False)
-                bcg_obj.rn = rn_obj
-                bcg_obj.save()
+        if incluir_bcg and rn_obj and bcg_form.is_valid():
+            bcg_obj = bcg_form.save(commit=False)
+            bcg_obj.rn = rn_obj
+            bcg_obj.save()
+
+        if accion == "enviar_supervisor":
+            messages.success(request, "Formulario enviado al supervisor correctamente.")
+        else:
+            messages.success(request, "Formulario guardado como borrador.")
 
         return redirect("/dashboard/")
 
@@ -106,3 +128,69 @@ def formulario_unico(request, id):
         "incluir_rn": incluir_rn,
         "incluir_bcg": incluir_bcg,
     })
+
+
+@login_required
+def supervisor_pendientes(request):
+    if request.user.role != "SUPERVISOR":
+        messages.error(request, "No tienes permiso para acceder a esta sección.")
+        return redirect("/dashboard/")
+
+    formularios_enviados = Madre.objects.filter(estado="ENVIADO").order_by("-fecha_envio")
+
+    return render(request, "supervisor_pendientes.html", {
+        "formularios": formularios_enviados,
+    })
+
+
+@login_required
+def supervisor_revisar(request, id):
+    if request.user.role != "SUPERVISOR":
+        messages.error(request, "No tienes permiso para acceder a esta sección.")
+        return redirect("/dashboard/")
+
+    madre = get_object_or_404(Madre, pk=id)
+    parto = Parto.objects.filter(madre=madre).first()
+    rn = RecienNacido.objects.filter(parto=parto).first() if parto else None
+    bcg = VacunaBCG.objects.filter(rn=rn).first() if rn else None
+
+    return render(request, "supervisor_revisar.html", {
+        "madre": madre,
+        "parto": parto,
+        "rn": rn,
+        "bcg": bcg,
+    })
+
+
+@login_required
+def supervisor_aprobar(request, id):
+    if request.user.role != "SUPERVISOR":
+        messages.error(request, "No tienes permiso para realizar esta acción.")
+        return redirect("/dashboard/")
+
+    madre = get_object_or_404(Madre, pk=id)
+
+    madre.estado = "APROBADO"
+    madre.validado_por = request.user
+    madre.fecha_validacion = timezone.now()
+    madre.save()
+
+    messages.success(request, "Formulario aprobado correctamente.")
+    return redirect("/supervisor/pendientes/")
+
+
+@login_required
+def supervisor_rechazar(request, id):
+    if request.user.role != "SUPERVISOR":
+        messages.error(request, "No tienes permiso para realizar esta acción.")
+        return redirect("/dashboard/")
+
+    madre = get_object_or_404(Madre, pk=id)
+
+    madre.estado = "RECHAZADO"
+    madre.validado_por = request.user
+    madre.fecha_validacion = timezone.now()
+    madre.save()
+
+    messages.error(request, "Formulario rechazado. La matrona podrá editarlo nuevamente.")
+    return redirect("/supervisor/pendientes/")

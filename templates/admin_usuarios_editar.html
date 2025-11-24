@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 600px;">
+
+    <h2 class="fw-bold mb-4">Editar Usuario</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" value="{{ usuario.first_name }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Apellido</label>
+                    <input type="text" name="apellido" class="form-control" value="{{ usuario.last_name }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Correo</label>
+                    <input type="email" name="email" class="form-control" value="{{ usuario.email }}" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nueva Contraseña (opcional)</label>
+                    <input type="password" name="password" class="form-control" placeholder="Dejar vacío para no cambiar">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Rol</label>
+                    <select name="rol" class="form-select">
+                        <option value="MATRONA" {% if usuario.role == 'MATRONA' %}selected{% endif %}>Matrona</option>
+                        <option value="SUPERVISOR" {% if usuario.role == 'SUPERVISOR' %}selected{% endif %}>Supervisor</option>
+                        <option value="ADMIN" {% if usuario.role == 'ADMIN' %}selected{% endif %}>Administrador</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary w-100">Guardar Cambios</button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <a href="{% url 'admin_usuarios_lista' %}" class="btn btn-secondary mt-3">
+        Volver atrás
+    </a>
+
+</div>
+
+{% endblock %}

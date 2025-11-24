@@ -2,6 +2,7 @@ from django import forms
 from .models import Madre, Parto, RecienNacido, VacunaBCG
 
 
+
 class MadreForm(forms.ModelForm):
     class Meta:
         model = Madre
@@ -20,12 +21,24 @@ class MadreForm(forms.ModelForm):
             "hepatitis_b_resultado",
             "profilaxis_completa",
         ]
+
         widgets = {
             "fecha_nacimiento": forms.DateInput(
-                attrs={"type": "date"},
+                attrs={"type": "date", "class": "form-control"},
                 format="%Y-%m-%d",
-            )
+            ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs.update({"class": "form-check-input"})
+            else:
+                field.widget.attrs.update({"class": "form-control"})
+
+
 
 class PartoForm(forms.ModelForm):
     class Meta:
@@ -44,24 +57,39 @@ class PartoForm(forms.ModelForm):
             "observaciones",
             "edad_gestacional_semanas",
             "edad_gestacional_dias",
+            "monitor",
+            "ttc",
+            "induccion",
+            "alumno",
+            "plan_parto",
+            "alumbramiento_rigido",
+            "clasificacion_robson",
+            "acompanante_parto",
+            "motivo_no_acompanado",
+            "persona_acompanante",
+            "acompanante_corta_cordon",
+            "causa_cesarea",
+            "uso_sala_saip",
+            "recuerdos",
+            "retira_placenta",
+            "estampado_placenta",
+            "manejo_dolor_farmacologico",
         ]
+
         widgets = {
-            "fecha_parto": forms.DateInput(
-                attrs={"type": "date"},
-                format="%Y-%m-%d",
-            ),
+            "fecha_parto": forms.DateInput(attrs={"type": "date"}),
             "hora_parto": forms.TimeInput(attrs={"type": "time"}),
+            "observaciones": forms.Textarea(attrs={"rows": 2}),
+            "motivo_no_acompanado": forms.Textarea(attrs={"rows": 2}),
+            "causa_cesarea": forms.Textarea(attrs={"rows": 2}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for field in self.fields.values():
+        for name, field in self.fields.items():
             field.required = False
 
-        self.fields["fecha_parto"].input_formats = ["%Y-%m-%d"]
-
-        for name, field in self.fields.items():
             if isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({"class": "form-check-input"})
             else:
@@ -97,6 +125,16 @@ class RecienNacidoForm(forms.ModelForm):
             "notas_rn",
         ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs.update({"class": "form-check-input"})
+            else:
+                field.widget.attrs.update({"class": "form-control"})
+
+
 
 class VacunaBCGForm(forms.ModelForm):
     class Meta:
@@ -108,3 +146,12 @@ class VacunaBCGForm(forms.ModelForm):
             "reaccion_adversa",
             "cama_ubicacion",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs.update({"class": "form-check-input"})
+            else:
+                field.widget.attrs.update({"class": "form-control"})

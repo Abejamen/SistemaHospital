@@ -1,5 +1,27 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% block content %}
-<h3>Dashboard Supervisor</h3>
-<p>Bienvenido, Supervisor.</p>
+
+<div class="container my-5">
+
+    <h2 class="fw-bold mb-4">Panel Supervisor</h2>
+
+    <div class="row justify-content-start mt-4">
+
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'supervisor_listado' %}" class="text-decoration-none">
+                <div class="admin-mini-card shadow-sm">
+
+                    <i class="fa-solid fa-clipboard-check admin-mini-icon"></i>
+
+                    <span class="admin-mini-text">Verificación de Formularios</span>
+
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

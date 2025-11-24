@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5" style="max-width: 500px;">
+
+    <div class="card shadow">
+        <div class="card-body text-center">
+
+            <h4 class="fw-bold">¿Eliminar usuario?</h4>
+
+            <p class="mt-3">
+                Estás a punto de eliminar a:<br>
+                <strong>{{ usuario.first_name }} {{ usuario.last_name }}</strong><br>
+                {{ usuario.email }}
+            </p>
+
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger w-100">Eliminar definitivamente</button>
+            </form>
+
+            <a href="{% url 'admin_usuarios_lista' %}" class="btn btn-secondary w-100 mt-2">
+                Cancelar
+            </a>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

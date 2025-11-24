@@ -1,5 +1,55 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% block content %}
-<h3>Dashboard Administrador</h3>
-<p>Bienvenido, Administrador.</p>
+
+<div class="container my-5">
+
+    <h2 class="fw-bold mb-4">Panel Administrador</h2>
+
+    <div class="row justify-content-start mt-4">
+
+
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'admin_usuarios_lista' %}" class="text-decoration-none">
+                <div class="admin-mini-card shadow-sm">
+                    <i class="fa-solid fa-users admin-mini-icon"></i>
+                    <span class="admin-mini-text">Gestión de Usuarios</span>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col-md-3 mb-3">
+            <a href="/admin/" class="text-decoration-none" target="_blank">
+                <div class="admin-mini-card shadow-sm">
+                    <i class="fa-solid fa-tools admin-mini-icon"></i>
+                    <span class="admin-mini-text">Panel Django</span>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col-md-3 mb-3">
+            <a href="#" class="text-decoration-none">
+                <div class="admin-mini-card shadow-sm">
+                    <i class="fa-solid fa-chart-line admin-mini-icon"></i>
+                    <span class="admin-mini-text">Reportes</span>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="col-md-3 mb-3">
+            <a href="#" class="text-decoration-none">
+                <div class="admin-mini-card shadow-sm">
+                    <i class="fa-solid fa-shield-heart admin-mini-icon"></i>
+                    <span class="admin-mini-text">Auditoría</span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

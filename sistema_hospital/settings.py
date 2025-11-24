@@ -115,7 +115,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 # Verificación de email: NONE para que no bloquee nada en desarrollo
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
-# Permitir registro de usuarios (ANTES ESTABA BLOQUEADO)
+# Permitir registro de usuarios
 ACCOUNT_ALLOW_REGISTRATION = True
 ACCOUNT_SIGNUP_ALLOWED = True
 

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 600px;">
+
+    <h2 class="fw-bold mb-4">Crear Usuario</h2>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <div class="card shadow">
+        <div class="card-body">
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Apellido</label>
+                    <input type="text" name="apellido" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Correo</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Contraseña</label>
+                    <input type="password" name="password" class="form-control" required minlength="8">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Rol del usuario</label>
+                    <select name="rol" class="form-select">
+                        <option value="MATRONA">Matrona</option>
+                        <option value="SUPERVISOR">Supervisor</option>
+                        <option value="ADMIN">Administrador</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-success w-100">Crear Usuario</button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <a href="{% url 'admin_usuarios_lista' %}" class="btn btn-secondary mt-3">
+        Volver atrás
+    </a>
+
+</div>
+
+{% endblock %}

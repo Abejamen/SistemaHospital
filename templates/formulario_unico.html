@@ -26,6 +26,7 @@
     <form method="post">
         {% csrf_token %}
 
+
         <div class="card shadow-lg border-0 mb-4" style="border-radius:20px;">
             <div class="card-header text-white fw-bold py-3"
                  style="background: linear-gradient(90deg, #0d6efd, #0a58ca); border-radius:20px 20px 0 0;">
@@ -115,6 +116,7 @@
             </label>
         </div>
 
+
         <div id="partoSection" class="card shadow-lg border-0 mb-4 {% if not incluir_parto %}d-none{% endif %}"
              style="border-radius:20px;">
 
@@ -191,8 +193,111 @@
                     <label class="form-label fw-semibold">Observaciones</label>
                     {{ parto_form.observaciones }}
                 </div>
+
+
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Monitor</label>
+                        {{ parto_form.monitor }}
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">TTC</label>
+                        {{ parto_form.ttc }}
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Inducción</label>
+                        {{ parto_form.induccion }}
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Alumno (nombre y apellido)</label>
+                        {{ parto_form.alumno }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Plan de parto</label>
+                        {{ parto_form.plan_parto }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Alumbramiento rígido</label>
+                        {{ parto_form.alumbramiento_rigido }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Clasificación Robson</label>
+                        {{ parto_form.clasificacion_robson }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Acompañante en el parto</label>
+                        {{ parto_form.acompanante_parto }}
+                    </div>
+
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold">Motivo no acompañado</label>
+                        {{ parto_form.motivo_no_acompanado }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Persona acompañante</label>
+                        {{ parto_form.persona_acompanante }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Acompañante corta cordón</label>
+                        {{ parto_form.acompanante_corta_cordon }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Causa de cesárea</label>
+                        {{ parto_form.causa_cesarea }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Uso sala SAIP</label>
+                        {{ parto_form.uso_sala_saip }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Recuerdos</label>
+                        {{ parto_form.recuerdos }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Retira placenta</label>
+                        {{ parto_form.retira_placenta }}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Estampado placenta</label>
+                        {{ parto_form.estampado_placenta }}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Manejo del dolor farmacológico</label>
+                        {{ parto_form.manejo_dolor_farmacologico }}
+                    </div>
+                </div>
+
             </div>
         </div>
+
+
 
 
         <div class="form-check mb-3">
@@ -215,7 +320,6 @@
             <div class="card-body">
 
                 {{ rn_form.non_field_errors }}
-
 
                 <div class="row mb-3">
                     <div class="col-md-4">
@@ -249,7 +353,7 @@
 
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Diagnóstico</label>
-                    {{ rn_form.diagnostico }}
+                    {{ rn_form.diagnostostico }}
                 </div>
 
                 <div class="row mb-3">
@@ -330,114 +434,110 @@
         </div>
 
 
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="chkBCG" name="incluir_bcg"
+                   {% if incluir_bcg %}checked{% endif %}>
+            <label class="form-check-label fw-semibold ms-1">
+                Registrar Vacuna BCG
+            </label>
+        </div>
 
-<div class="form-check mb-3">
-    <input class="form-check-input" type="checkbox" id="chkBCG" name="incluir_bcg"
-           {% if incluir_bcg %}checked{% endif %}>
-    <label class="form-check-label fw-semibold ms-1">
-        Registrar Vacuna BCG
-    </label>
-</div>
+        <div id="bcgSection" class="card shadow-lg border-0 mb-4 {% if not incluir_bcg %}d-none{% endif %}"
+             style="border-radius:20px;">
 
+            <div class="card-header text-white fw-bold py-3"
+                 style="background: linear-gradient(90deg, #0d6efd, #0a58ca); border-radius:20px 20px 0 0;">
+                Registro Vacuna BCG
+            </div>
 
-<div id="bcgSection" class="card shadow-lg border-0 mb-4 {% if not incluir_bcg %}d-none{% endif %}"
-     style="border-radius:20px;">
+            <div class="card-body">
 
-    <div class="card-header text-white fw-bold py-3"
-         style="background: linear-gradient(90deg, #0d6efd, #0a58ca); border-radius:20px 20px 0 0;">
-        Registro Vacuna BCG
+                {{ bcg_form.non_field_errors }}
+
+                <div class="row mb-4">
+                    <div class="col-md-4 form-check mt-4">
+                        {{ bcg_form.aplicada }}
+                        <label class="form-check-label ms-1">Aplicada</label>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold">Comuna</label>
+                        {{ bcg_form.comuna }}
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Reacción adversa</label>
+                        {{ bcg_form.reaccion_adversa }}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Cama / ubicación</label>
+                        {{ bcg_form.cama_ubicacion }}
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h5 class="fw-bold mb-3" style="color:#1a3d7c;">Datos automáticos del sistema</h5>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Nombre madre</label>
+                        <input type="text" class="form-control" value="{{ bcg.nombre_completo_madre }}" disabled>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">RUT madre</label>
+                        <input type="text" class="form-control" value="{{ bcg.rut_madre }}" disabled>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Fecha nacimiento madre</label>
+                        <input type="text" class="form-control" value="{{ bcg.fecha_nacimiento_madre }}" disabled>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Fecha nacimiento hijo</label>
+                        <input type="text" class="form-control" value="{{ bcg.fecha_nacimiento_hijo }}" disabled>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Sexo RN</label>
+                        <input type="text" class="form-control" value="{{ bcg.sexo_rn }}" disabled>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Peso RN (g)</label>
+                        <input type="text" class="form-control" value="{{ bcg.peso_rn }}" disabled>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    <div class="d-flex justify-content-end gap-2 mb-4">
+    
+        <button name="accion" value="guardar_borrador"
+                class="btn btn-secondary btn-lg px-4 shadow-sm" style="border-radius:12px;">
+            Guardar borrador
+        </button>
+
+        <button name="accion" value="enviar_supervisor"
+                class="btn btn-primary btn-lg px-4 shadow-sm" style="border-radius:12px;">
+            Enviar al supervisor
+        </button>
+
     </div>
 
-    <div class="card-body">
-
-        {{ bcg_form.non_field_errors }}
-
-
-        <div class="row mb-4">
-            <div class="col-md-4 form-check mt-4">
-                {{ bcg_form.aplicada }}
-                <label class="form-check-label ms-1">Aplicada</label>
-            </div>
-
-            <div class="col-md-8">
-                <label class="form-label fw-semibold">Comuna</label>
-                {{ bcg_form.comuna }}
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Reacción adversa</label>
-                {{ bcg_form.reaccion_adversa }}
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Cama / ubicación</label>
-                {{ bcg_form.cama_ubicacion }}
-            </div>
-        </div>
-
-        <hr class="my-4">
-
-
-        <h5 class="fw-bold mb-3" style="color:#1a3d7c;">Datos automáticos del sistema</h5>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Nombre madre</label>
-                <input type="text" class="form-control" value="{{ bcg.nombre_completo_madre }}"
-                       disabled>
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">RUT madre</label>
-                <input type="text" class="form-control" value="{{ bcg.rut_madre }}" 
-                       disabled>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Fecha nacimiento madre</label>
-                <input type="text" class="form-control" value="{{ bcg.fecha_nacimiento_madre }}"
-                       disabled>
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Fecha nacimiento hijo</label>
-                <input type="text" class="form-control" value="{{ bcg.fecha_nacimiento_hijo }}"
-                       disabled>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Sexo RN</label>
-                <input type="text" class="form-control" value="{{ bcg.sexo_rn }}"
-                       disabled>
-            </div>
-
-            <div class="col-md-6">
-                <label class="form-label fw-semibold">Peso RN (g)</label>
-                <input type="text" class="form-control" value="{{ bcg.peso_rn }}"
-                       disabled>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
-        <div class="text-end mb-4">
-            <button class="btn btn-primary btn-lg px-4 shadow-sm" style="border-radius:12px;">
-                Guardar
-            </button>
-        </div>
 
     </form>
 </div>
-
-
 
 <script>
     const chkParto = document.getElementById("chkParto");

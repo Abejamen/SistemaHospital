@@ -3,6 +3,13 @@ from django.conf import settings
 
 
 class Madre(models.Model):
+    ESTADOS_FORMULARIO = [
+        ('BORRADOR', 'Borrador'),
+        ('ENVIADO', 'Enviado al Supervisor'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
+    ]
+
     nombre_completo = models.CharField(max_length=150)
     rut = models.CharField(max_length=20, null=True, blank=True)
     fecha_nacimiento = models.DateField(null=True, blank=True)
@@ -16,28 +23,74 @@ class Madre(models.Model):
     vdrl_tratamiento = models.BooleanField(default=False)
     hepatitis_b_resultado = models.CharField(max_length=50, null=True, blank=True)
     profilaxis_completa = models.BooleanField(default=False)
+
     creado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    estado = models.CharField(max_length=20, choices=ESTADOS_FORMULARIO, default='BORRADOR')
+    fecha_envio = models.DateTimeField(null=True, blank=True)
+    validado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='validaciones'
+    )
+    fecha_validacion = models.DateTimeField(null=True, blank=True)
+
+    revisado = models.BooleanField(default=False)
+    aprobado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre_completo
 
 
+
 class Parto(models.Model):
     madre = models.ForeignKey(Madre, on_delete=models.CASCADE)
-    fecha_parto = models.DateField()
+    fecha_parto = models.DateField(null=True, blank=True)
     hora_parto = models.TimeField(null=True, blank=True)
-    tipo_parto = models.CharField(max_length=50)
+    tipo_parto = models.CharField(max_length=50, null=True, blank=True)
+
     ive_causal2 = models.BooleanField(default=False)
     acompanante_pabellon = models.BooleanField(default=False)
     clampeo_tardio = models.BooleanField(default=False)
     gases_cordon = models.BooleanField(default=False)
     apego_canguro = models.BooleanField(default=False)
     apego_tunel = models.BooleanField(default=False)
+
     profesional_responsable = models.CharField(max_length=150, null=True, blank=True)
     observaciones = models.TextField(null=True, blank=True)
+
     edad_gestacional_semanas = models.IntegerField(null=True, blank=True)
     edad_gestacional_dias = models.IntegerField(null=True, blank=True)
+
+
+
+    monitor = models.BooleanField(default=False)
+    ttc = models.BooleanField(default=False)
+
+    induccion = models.BooleanField(default=False)
+
+    alumno = models.CharField(max_length=150, null=True, blank=True) 
+
+    plan_parto = models.BooleanField(default=False)
+    alumbramiento_rigido = models.BooleanField(default=False)
+
+    clasificacion_robson = models.CharField(max_length=50, null=True, blank=True)
+
+    acompanante_parto = models.BooleanField(default=False)
+    motivo_no_acompanado = models.CharField(max_length=200, null=True, blank=True)
+    persona_acompanante = models.CharField(max_length=150, null=True, blank=True)
+
+    acompanante_corta_cordon = models.BooleanField(default=False)
+
+    causa_cesarea = models.CharField(max_length=200, null=True, blank=True)
+
+    uso_sala_saip = models.BooleanField(default=False)
+    recuerdos = models.BooleanField(default=False)
+
+    retira_placenta = models.BooleanField(default=False)
+    estampado_placenta = models.BooleanField(default=False)
+
+    manejo_dolor_farmacologico = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Parto de {self.madre.nombre_completo}"
@@ -45,11 +98,11 @@ class Parto(models.Model):
 
 class RecienNacido(models.Model):
     parto = models.ForeignKey(Parto, on_delete=models.CASCADE)
-    apellido_paterno = models.CharField(max_length=100)
-    sexo = models.CharField(max_length=10)
-    peso = models.IntegerField()
-    talla = models.DecimalField(max_digits=4, decimal_places=1)
-    circunferencia_craneana = models.DecimalField(max_digits=4, decimal_places=1)
+    apellido_paterno = models.CharField(max_length=100, null=True, blank=True)
+    sexo = models.CharField(max_length=10, null=True, blank=True)
+    peso = models.IntegerField(null=True, blank=True)
+    talla = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
+    circunferencia_craneana = models.DecimalField(max_digits=4, decimal_places=1, null=True, blank=True)
     diagnostico = models.CharField(max_length=200, null=True, blank=True)
     malformacion_congenita = models.BooleanField(default=False)
     descripcion_malformacion = models.TextField(null=True, blank=True)
@@ -65,7 +118,7 @@ class RecienNacido(models.Model):
     semanas_gestacion = models.IntegerField(null=True, blank=True)
     dias_gestacion = models.IntegerField(null=True, blank=True)
     apego_inmediato = models.BooleanField(default=False)
-    destino_final = models.CharField(max_length=50)
+    destino_final = models.CharField(max_length=50, null=True, blank=True)
     notas_rn = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -74,7 +127,6 @@ class RecienNacido(models.Model):
 
 class VacunaBCG(models.Model):
     rn = models.ForeignKey(RecienNacido, on_delete=models.SET_NULL, null=True)
-
     numero_registro = models.CharField(max_length=20, null=True, blank=True)
 
     nombre_completo_madre = models.CharField(max_length=150, null=True, blank=True)

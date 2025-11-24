@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-4">
+
+    <h2 class="fw-bold mb-4">Formularios Pendientes de Revisión</h2>
+
+    {% if formularios %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Madre</th>
+                            <th>RUT</th>
+                            <th>Creado por</th>
+                            <th>Fecha envío</th>
+                            <th class="text-center">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in formularios %}
+                        <tr>
+                            <td>{{ m.nombre_completo }}</td>
+                            <td>{{ m.rut }}</td>
+                            <td>{{ m.creado_por.first_name }} {{ m.creado_por.last_name }}</td>
+                            <td>{{ m.fecha_envio|date:"d/m/Y H:i" }}</td>
+                            <td class="text-center">
+                                <a href="{% url 'formularios:supervisor_revisar' m.id %}" 
+                                   class="btn btn-warning btn-sm">
+                                    Revisar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    {% else %}
+        <div class="alert alert-info">
+            No hay formularios enviados por revisar.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
