@@ -138,7 +138,7 @@ class VacunaBCG(models.Model):
     peso_rn = models.IntegerField(null=True, blank=True)
 
     aplicada = models.BooleanField(default=False)
-    comuna = models.CharField(max_length=100)
+    comuna = models.CharField(max_length=100, blank=True, null=True)
     reaccion_adversa = models.CharField(max_length=100, null=True, blank=True)
     cama_ubicacion = models.CharField(max_length=50, null=True, blank=True)
 

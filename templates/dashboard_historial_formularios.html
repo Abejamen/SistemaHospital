@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-4">
+
+    <a href="{% url 'supervisor_dashboard' %}" class="btn btn-outline-secondary mb-3">
+        <i class="fa-solid fa-arrow-left"></i> Volver
+    </a>
+
+    <h2 class="fw-bold mb-4">Historial de Formularios</h2>
+
+    <div class="alert alert-secondary">
+        Listado completo de todos los formularios creados por las matronas.
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Madre</th>
+                        <th>RUT</th>
+                        <th>Estado</th>
+                        <th>Matrona</th>
+                        <th>Fecha Creación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for f in formularios %}
+                    <tr>
+                        <td>#{{ f.id }}</td>
+                        <td>{{ f.nombre_completo }}</td>
+                        <td>{{ f.rut }}</td>
+
+                        <td>
+                            {% if f.estado == "BORRADOR" %}
+                                <span class="badge bg-secondary">Borrador</span>
+                            {% elif f.estado == "ENVIADO" %}
+                                <span class="badge bg-warning text-dark">Enviado</span>
+                            {% elif f.estado == "APROBADO" %}
+                                <span class="badge bg-success">Aprobado</span>
+                            {% elif f.estado == "RECHAZADO" %}
+                                <span class="badge bg-danger">Rechazado</span>
+                            {% endif %}
+                        </td>
+
+                        <td>{{ f.creado_por.first_name }} {{ f.creado_por.last_name }}</td>
+
+                        <td>{{ f.fecha_creacion|date:"d/m/Y H:i" }}</td>
+
+                        <td>
+                            <a href="{% url 'supervisor_revisar' f.id %}" class="btn btn-outline-primary btn-sm">
+                                Ver
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-3">No hay formularios registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

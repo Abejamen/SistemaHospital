@@ -82,6 +82,19 @@ def supervisor_dashboard_listado(request):
 
 
 @login_required
+def dashboard_historial_formularios(request):
+    """ Muestra TODOS los formularios creados por TODAS las matronas """
+    if request.user.role != "SUPERVISOR":
+        return redirect("dashboard_view")
+
+    formularios = Madre.objects.all().order_by("-fecha_creacion")
+
+    return render(request, "dashboard_historial_formularios.html", {
+        "formularios": formularios
+    })
+
+
+@login_required
 def supervisor_revisar(request, id):
     if request.user.role != "SUPERVISOR":
         return redirect("dashboard_view")
